@@ -3,7 +3,7 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.agent.workflow import FunctionAgent, ReActAgent
 from llama_index.core.workflow import Context
 from llama_index.core.agent.workflow import AgentStream, ToolCallResult
-from functions import search_perplexity, fft
+from functions import search_perplexity, fft, file_meta_data
 from tracing import setup_tracing
 from prompts import system_prompt
 import os
@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.INFO)
 # a format which can be converted to a short-ish string (<10,000 characters, ideally)
 # Examples of return types that would be good: dictionary, list, string, file paths
 # Bad types: Numpy array, pandas dataframe (unless calling .to_csv() or .to_json() on them)
-tools = [fft, search_perplexity]
+tools = [fft, search_perplexity, file_meta_data]
 
 async def main(query: str):
 
