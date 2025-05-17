@@ -68,7 +68,7 @@ def fft(file_path, cutoff_lo, cutoff_hi, bins=20):
     """
     Computes the normalized binned spectral power of an audio file using the Fast Fourier Transform (FFT).
     
-    This function takes an audio file, converts it to WAV format using ffmpeg,
+    This function takes any audio file readable by ffmpeg (.mp3, .m4a, .wav, .aac, .flac, .ogg, .aif, .wma, .alac, .opus, etc.), converts it to WAV format using ffmpeg,
     extracts its signal and sample rate, computes the FFT, and returns a CSV-formatted
     string representing the normalized power spectrum across specified frequency bins.
 
@@ -93,7 +93,7 @@ def fft(file_path, cutoff_lo, cutoff_hi, bins=20):
     wav_file = input_file_path.with_suffix('.wav')
 
     #Convert to WAV format
-    subprocess.run(['ffmpeg', '-y', '-i', str(input_file_path), str(wav_file)], check=True)
+    subprocess.run(['ffmpeg', '-y', '-i', '-q', str(input_file_path), str(wav_file)], check=True)
 
     signal, sample_rate = open_audio(str(wav_file))
 
