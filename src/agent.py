@@ -3,7 +3,9 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.agent.workflow import ReActAgent
 from llama_index.core.workflow import Context
 from llama_index.core.agent.workflow import AgentStream, ToolCallResult
+from llama_index.core.agent.react.formatter import ReActChatFormatter
 from functions import search_perplexity
+from prompts import system_prompt
 
 import os
 import logging
@@ -11,7 +13,7 @@ import logging
 # If the logging level is set to DEBUG, it will print all logs
 # which can be overwhelming but useful for seeing the actual
 # HTTP calls
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 # Define tools here; these are just placeholders
 def multiply(a: int, b: int) -> int:
@@ -40,7 +42,9 @@ async def main():
     openai_api_key = os.getenv("OPENAI_API_KEY") # Won't work unless we call load_dotenv() first
 
     llm = OpenAI(model="gpt-4o", api_key=openai_api_key)
-    agent = ReActAgent(tools=tools, llm=llm)
+    formatter = ReActChatFormatter.from_defaults()
+    formatter.system_header = system_prompt
+    agent = ReActAgent(tools=tools, llm=llm, formatter=formatter)
 
     # Create a context to store the conversation history/session state
     ctx = Context(agent)
