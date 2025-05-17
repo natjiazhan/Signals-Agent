@@ -45,7 +45,7 @@ def main():
         # Run analysis
         console.print("\nStarting analysis...\n", style="bold yellow")
         try:
-            asyncio.run(run_agent(instructions))
+            asyncio.run(run_agent(instructions, console=console))
         except KeyboardInterrupt:
             console.print("\nAnalysis interrupted.\n", style="bold red")
             continue

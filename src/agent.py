@@ -10,6 +10,8 @@ import os
 import logging
 import asyncio
 from llama_index.core import PromptTemplate
+from rich.console import Console
+from rich.panel import Panel
 
 
 # Passes all the API calls to the OpenTelemetry collector 
@@ -21,7 +23,7 @@ logging.basicConfig(level=logging.INFO)
 # Available tools
 tools = [fft, search_perplexity, file_meta_data]
 
-async def run_agent(query: str):
+async def run_agent(query: str, console: Console = Console()):
     """Run the agent with the given query.
     
     Args:
@@ -39,12 +41,42 @@ async def run_agent(query: str):
 
     ctx = Context(agent)
     handler = agent.run(query, ctx=ctx)
+    
+    # Buffer for accumulating agent stream text
+    agent_buffer = ""
 
     async for ev in handler.stream_events():
         if isinstance(ev, ToolCallResult):
-            print(f"\n(TOOL CALL) Used tool `{ev.tool_name}` with {ev.tool_kwargs}\nReturned: {ev.tool_output}")
-        if isinstance(ev, AgentStream):
-            print(f"{ev.delta}", end="", flush=True) # Prints the token from the LLM without making a new line every time
+            # If we have accumulated agent text, print it in its own panel first
+            if agent_buffer:
+                console.print(Panel(
+                    agent_buffer,
+                    title="Agent Thoughts",
+                    style="green",
+                    expand=False,
+                ))
+                agent_buffer = ""  # Clear the buffer
+                
+            # Then print the tool call result
+            console.print(Panel(
+                f"Used tool `{ev.tool_name}` with {ev.tool_kwargs}\nReturned: {ev.tool_output}",
+                title="Tool Result",
+                style="dim",
+                border_style="dim",
+                expand=False,
+            ))
+        elif isinstance(ev, AgentStream):
+            # Accumulate agent text instead of printing directly
+            agent_buffer += ev.delta
+    
+    # Print any remaining agent text
+    if agent_buffer:
+        console.print(Panel(
+            agent_buffer,
+            title="Agent Thoughts",
+            style="green",
+            expand=False,
+        ))
 
     response = await handler
     
