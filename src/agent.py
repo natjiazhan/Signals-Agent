@@ -9,6 +9,7 @@ from prompts import system_prompt
 import os
 import logging
 import asyncio
+from llama_index.core import PromptTemplate
 
 
 # Passes all the API calls to the OpenTelemetry collector 
@@ -38,6 +39,8 @@ async def main(query: str):
 
     llm = OpenAI(model="gpt-4o", api_key=openai_api_key)
     agent = ReActAgent(tools=tools, llm=llm)
+    agent.update_prompts({"react_header": PromptTemplate(system_prompt)})
+
     ctx = Context(agent)
         
     handler = agent.run(query, ctx=ctx)
