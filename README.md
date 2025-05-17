@@ -19,5 +19,6 @@ Before running the agent, you may want to start the Phoenix observability applic
 ```
 python -m phoenix.server.main serve
 ```
+This will start up a dashboard which can be viewed at http://0.0.0.0:6006/projects.
 
 To run the agent, run `python src/agent.py`
