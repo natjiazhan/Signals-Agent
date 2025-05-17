@@ -12,7 +12,7 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-Then, create a `.env` file in this folder and make sure you set `OPENAI_API_KEY="sk-..."`.
+Then, create a `.env` file in this folder and make sure you set `OPENAI_API_KEY="sk-..."` as well as `PPLX_API_KEY`
 
 ## Running the agent workflow
 Before running the agent, you may want to start the Phoenix observability application with the following command:
