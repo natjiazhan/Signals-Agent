@@ -51,37 +51,69 @@ def search_perplexity(
     
     return content
 
-if __name__ == "__main__":
-    # Example usage
-    query = "Who won the 2024 Men's Olympic soccer finals match"
-    answer = search_perplexity(query)
-    print(answer)
+
+# Define the file meta data tool
+def file_meta_data(file_path: str) -> str:
+    """
+    Extracts metadata from an audio file using ffprobe.
+    
+    Args:
+        file_path: Path to the input audio file (e.g., .m4a).
+    
+    Returns:
+        A CSV-formatted string containing:
+        - 'Property': Metadata property name
+        - 'Value': Corresponding value of the property
+    """
+    # Use ffprobe to extract metadata
+    result = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration,bit_rate', '-of', 'default=noprint_wrappers=1:nokey=1', file_path], capture_output=True, text=True)
+    
+    # Parse the output
+    lines = result.stdout.strip().split('\n')
+    properties = ['Duration (seconds)', 'Bit Rate (kbps)']
+    
+    # Create a DataFrame and return as CSV
+    df = pd.DataFrame({
+        'Property': properties,
+        'Value': lines
+    })
+    
+    return df.to_csv(index=False)
+
+# Test for file_meta_data function
+##if __name__ == "__main__":
+    ##file_path = "hamilton_ave.m4a"
+    ##df = file_meta_data(file_path)
+    ##print(df)
 
 
-
-#define the fft function
-def fft(file_path, cutoff_lo, cutoff_hi, bins=20):
+# Define the fft tool
+def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, window_sec=0.5, bins=20):
     file_path: str
     cutoff_hi: float
     cutoff_lo: float
+    start_sec: float
+    end_sec: float
+    window_sec: float
     bins: int
     """
-    Computes the normalized binned spectral power of an audio file using the Fast Fourier Transform (FFT).
-    
-    This function takes any audio file readable by ffmpeg (.mp3, .m4a, .wav, .aac, .flac, .ogg, .aif, .wma, .alac, .opus, etc.), converts it to WAV format using ffmpeg,
-    extracts its signal and sample rate, computes the FFT, and returns a CSV-formatted
-    string representing the normalized power spectrum across specified frequency bins.
+    Computes a time-frequency spectrogram as a CSV-formatted string.
+
+    This function converts an input audio file to WAV, extracts a segment between start_sec and end_sec,
+    computes the FFT for each time window, bins the spectral power into frequency bins, and returns
+    a CSV-formatted string representing time-frequency energy.
 
     Args:
         file_path: Path to the input audio file (e.g., .m4a).
         cutoff_lo: Lower bound of the frequency range to analyze (in Hz).
         cutoff_hi: Upper bound of the frequency range to analyze (in Hz).
+        start_sec: Start time of the audio segment to analyze (in seconds).
+        end_sec: End time of the audio segment to analyze (in seconds).
         bins: Number of equal-width frequency bins between cutoff_lo and cutoff_hi (e.g., 20).
+        window_sec: Time window size for each FFT (in seconds).
 
     Returns:
-        A CSV-formatted string containing:
-        - 'Frequency bin': frequency ranges in Hz (e.g., "0-100Hz")
-        - 'Normalized Spectral Power': normalized spectral power (sums to 1), rounded to 3 decimal places.
+        - A CSV-formatted string where rows are time slices and columns are frequency bins.
 
     Notes:
         - Stereo audio is automatically converted to mono.
@@ -93,7 +125,7 @@ def fft(file_path, cutoff_lo, cutoff_hi, bins=20):
     wav_file = input_file_path.with_suffix('.wav')
 
     #Convert to WAV format
-    subprocess.run(['ffmpeg', '-y', '-i', '-q', str(input_file_path), str(wav_file)], check=True)
+    subprocess.run(['ffmpeg', '-y', '-i', str(input_file_path), str(wav_file)], check=True)
 
     signal, sample_rate = open_audio(str(wav_file))
 
@@ -101,44 +133,72 @@ def fft(file_path, cutoff_lo, cutoff_hi, bins=20):
     if signal.ndim == 2:
         signal = np.mean(signal, axis=1)
 
-    # Perform FFT
-    fft_result = np.fft.fft(signal)
-    freqency = np.fft.fftfreq(len(signal), d=1/sample_rate)
-    power = np.abs(fft_result)**2
+    # Trim the signal to the specified time range
+    start_sample = int(start_sec * sample_rate)
+    end_sample = int(end_sec * sample_rate)
+    signal = signal[start_sample:end_sample]
 
-    #only keep the frequencies within the cutoff range
-    mask = (freqency >= cutoff_lo) & (freqency <= cutoff_hi)
-    freqency = freqency[mask]
-    power = power[mask]
+    #Windowing setup
+    window_size = int(window_sec * sample_rate)
+    num_windows = (len(signal) - window_size) //window_size + 1
 
-    #bin the frequencies and power
+    #Frequency bin setup
     bin_edges = np.linspace(cutoff_lo, cutoff_hi, bins + 1)
     bin_labels = [f"{int(bin_edges[i])}-{int(bin_edges[i+1])}Hz" for i in range(bins)]
-    binned_power = np.zeros(bins)
 
-    #Bin the power
-    indices = np.digitize(freqency, bin_edges) - 1
-    for i in range(len(freqency)):
-        if 0 <= indices[i] < bins:
-            binned_power[indices[i]] += power[i]
+    spectrogram = []
 
-    #Normalize the binned power
-    binned_power /= np.sum(binned_power)
+    #Slide window over signal
+    for w in range(num_windows):
+        start = w * window_size
+        end = start + window_size
+        windowed_signal = signal[start:end]
 
-    #output datafram string fromatted as a CSV
-    df = pd.DataFrame({
-        'Frequency bin': bin_labels,
-        'Normalized Spectral Power': binned_power
-    })
+        # Perform FFT on the windowed signal
+        fft_result = np.fft.fft(windowed_signal)
+        frequency = np.fft.fftfreq(len(windowed_signal), d=1/sample_rate)
+        power = np.abs(fft_result)**2
+
+        #only keep the frequencies within the cutoff range
+        mask = (frequency >= cutoff_lo) & (frequency <= cutoff_hi)
+        frequency = frequency[mask]
+        power = power[mask]
+
+        #bin the frequencies and power
+        indices = np.digitize(frequency, bin_edges) - 1
+        binned_power = np.zeros(bins)
+
+        for i in range(len(frequency)):
+            if 0 <= indices[i] < bins:
+                binned_power[indices[i]] += power[i]
+
+        #Normalize the binned power
+        binned_power /= np.sum(binned_power)
+
+        # Append time-stamped row
+        time_stamp = round(start_sec + w * window_sec, 2)
+        spectrogram.append([f"{time_stamp:.2f}s"] + list(binned_power))
+
+    # Create DataFrame and convert to CSV string
+    df = pd.DataFrame(spectrogram, columns=["Time"] + bin_labels)
     return df.to_csv(index=False, float_format="%.3f")
 
-#Test for FFT function
+if __name__ == "__main__":
+    # Example usage
+    csv_str = fft("Hamilton Ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, bins=20)
+    print(csv_str)
+
 ##if __name__ == "__main__":
-    ##cutoff_lo = 0
-    ##cutoff_hi = 2000
-    ##bins = 20
-    ##df = fft(signal, sample_rate, cutoff_lo, cutoff_hi, bins)
-    ##print(df)
+    # Example usage
+    ##query = "Who won the 2024 Men's Olympic soccer finals match"
+    ##answer = search_perplexity(query)
+    ##print(answer)
+
+
+#Test for spectrogram function
+##if __name__ == "__main__":
+    ##csv_str = fft("Hamilton Ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, bins=20)
+    ##print(csv_str)
 
 #Test for raw audio to signal conversion
 ##if __name__ == "__main__":
