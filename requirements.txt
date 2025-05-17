@@ -1,5 +1,4 @@
-*.txt
-.DS_Store
-.venv
-*.egg-info*
-!requirements.txt
+chainlit
+scipy
+librosa
+pyannote.audio
