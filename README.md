@@ -19,6 +19,9 @@ Before running the agent, you may want to start the Phoenix observability applic
 ```
 python -m phoenix.server.main serve
 ```
+
+You can also run `nohup python -m phoenix.server.main serve > tracing.log &` to run this in the background.
+
 This will start up a dashboard which can be viewed at http://0.0.0.0:6006/projects.
 
 To run the agent, run `python src/agent.py`
