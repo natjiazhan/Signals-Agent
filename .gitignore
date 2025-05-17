@@ -4,3 +4,13 @@
 *.egg-info*
 */PKG-INFO
 .env
+__pycache__/
+*.pyc
+*.pyo
+
+# pkg info
+*.egg-info
+*.egg
+*.whl
+*.dist-info
+*.egg-info/
