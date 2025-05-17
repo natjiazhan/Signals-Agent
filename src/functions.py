@@ -127,8 +127,8 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, time_bins=10, freq_
 
     #Convert to WAV format
     subprocess.run(['ffmpeg', '-y', '-i', str(input_file_path), str(wav_file)], 
-                  stdout=subprocess.DEVNULL, 
-                  stderr=subprocess.DEVNULL, 
+                  #stdout=subprocess.DEVNULL, 
+                  #stderr=subprocess.DEVNULL, 
                   check=True)
 
     signal, sample_rate = open_audio(str(wav_file))
@@ -179,9 +179,11 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, time_bins=10, freq_
         #Normalize the binned power
         binned_power /= np.sum(binned_power) if np.sum(binned_power) > 0 else 1
 
-        # Append time-stamped row
-        time_stamp = round(start_sec + w * ((end_sec - start_sec) / time_bins), 2)
-        spectrogram.append([f"{time_stamp:.2f}s"] + list(binned_power))
+        # Append time range label
+        start_time = round(start_sec + w * ((end_sec - start_sec) / time_bins), 2)
+        end_time = round(start_time + ((end_sec - start_sec) / time_bins), 2)
+        time_label = f"{start_time:.2f}-{end_time:.2f}sec"
+        spectrogram.append([time_label] + list(binned_power))
 
     # Create DataFrame and convert to CSV string
     df = pd.DataFrame(spectrogram, columns=["Time"] + bin_labels)
@@ -189,9 +191,8 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, time_bins=10, freq_
 
 if __name__ == "__main__":
     # Example usage
-    #csv_str = fft("hamilton_ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, time_bins=10, freq_bins=20)
-    #print(csv_str)
-    print(file_meta_data("./data/hamilton_ave.m4a"))
+    csv_str = fft("data/audio1.mp3", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, time_bins=10, freq_bins=20)
+    print(csv_str)
 
 ##if __name__ == "__main__":
     # Example usage
