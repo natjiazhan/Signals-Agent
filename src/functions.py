@@ -1,6 +1,11 @@
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+import subprocess
+import pandas as pd
+from pathlib import Path
+from audio2numpy import open_audio
+import numpy as np
 
 load_dotenv()
 
@@ -53,27 +58,24 @@ if __name__ == "__main__":
     print(answer)
 
 
-import subprocess
-import pandas as pd
-from pathlib import Path
-from audio2numpy import open_audio
-import numpy as np
-
-# Load the audio file
-input_file = Path("Hamilton Ave.m4a")
-wav_file = input_file.with_suffix('.wav')
-
-#Convert to WAV format
-subprocess.run(['ffmpeg', '-i', str(input_file), str(wav_file)], check=True)
-
-signal, sample_rate = open_audio(str(wav_file))
-
-# Convert to mono if stereo
-if signal.ndim == 2:
-    signal = np.mean(signal, axis=1)
 
 #define the fft function
-def fft(signal, sample_rate, cutoff_lo, cutoff_hi, bins=20):
+def fft(file_path, cutoff_lo, cutoff_hi, bins=20):
+    
+    # Load the audio file
+    input_file_path = Path(file_path)
+    wav_file = input_file_path.with_suffix('.wav')
+
+    #Convert to WAV format
+    subprocess.run(['ffmpeg', '-y', '-i', str(input_file_path), str(wav_file)], check=True)
+
+    signal, sample_rate = open_audio(str(wav_file))
+
+    # Convert to mono if stereo
+    if signal.ndim == 2:
+        signal = np.mean(signal, axis=1)
+
+    # Perform FFT
     fft_result = np.fft.fft(signal)
     freqency = np.fft.fftfreq(len(signal), d=1/sample_rate)
     power = np.abs(fft_result)**2
