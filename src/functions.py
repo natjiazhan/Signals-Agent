@@ -61,7 +61,33 @@ if __name__ == "__main__":
 
 #define the fft function
 def fft(file_path, cutoff_lo, cutoff_hi, bins=20):
+    file_path: str
+    cutoff_hi: float
+    cutoff_lo: float
+    bins: int
+    """
+    Computes the normalized binned spectral power of an audio file using the Fast Fourier Transform (FFT).
     
+    This function takes an audio file, converts it to WAV format using ffmpeg,
+    extracts its signal and sample rate, computes the FFT, and returns a CSV-formatted
+    string representing the normalized power spectrum across specified frequency bins.
+
+    Args:
+        file_path: Path to the input audio file (e.g., .m4a).
+        cutoff_lo: Lower bound of the frequency range to analyze (in Hz).
+        cutoff_hi: Upper bound of the frequency range to analyze (in Hz).
+        bins: Number of equal-width frequency bins between cutoff_lo and cutoff_hi (e.g., 20).
+
+    Returns:
+        A CSV-formatted string containing:
+        - 'Frequency bin': frequency ranges in Hz (e.g., "0-100Hz")
+        - 'Normalized Spectral Power': normalized spectral power (sums to 1), rounded to 3 decimal places.
+
+    Notes:
+        - Stereo audio is automatically converted to mono.
+        - Uses power spectrum magnitude (|FFT|²) as the measure of spectral energy.
+    """
+
     # Load the audio file
     input_file_path = Path(file_path)
     wav_file = input_file_path.with_suffix('.wav')
@@ -102,9 +128,10 @@ def fft(file_path, cutoff_lo, cutoff_hi, bins=20):
     #output datafram string fromatted as a CSV
     df = pd.DataFrame({
         'Frequency bin': bin_labels,
-        'Spectral Power': binned_power
+        'Normalized Spectral Power': binned_power
     })
     return df.to_csv(index=False, float_format="%.3f")
+
 #Test for FFT function
 ##if __name__ == "__main__":
     ##cutoff_lo = 0
