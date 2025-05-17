@@ -13,3 +13,11 @@ pip install -e .
 ```
 
 Then, create a `.env` file in this folder and make sure you set `OPENAI_API_KEY="sk-..."`.
+
+## Running the agent workflow
+Before running the agent, you may want to start the Phoenix observability application with the following command:
+```
+python -m phoenix.server.main serve
+```
+
+To run the agent, run `python src/agent.py`
