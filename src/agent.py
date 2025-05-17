@@ -15,34 +15,29 @@ from llama_index.core import PromptTemplate
 # Passes all the API calls to the OpenTelemetry collector 
 setup_tracing()
 
-# If the logging level is set to DEBUG, it will print all logs
-# which can be overwhelming but useful for seeing the actual
-# HTTP calls
+# Configure logging
 logging.basicConfig(level=logging.INFO)
 
-# Note that tools are just functions, but their return values should have 
-# a format which can be converted to a short-ish string (<10,000 characters, ideally)
-# Examples of return types that would be good: dictionary, list, string, file paths
-# Bad types: Numpy array, pandas dataframe (unless calling .to_csv() or .to_json() on them)
+# Available tools
 tools = [fft, search_perplexity, file_meta_data]
 
-async def main(query: str):
-
-    # Set up the OpenAI API key
-    # This key is used to authenticate requests to the OpenAI API
-    # It should be kept secret and not shared publicly
-    # Load the credentials from .env file
-    # The .env file should NOT be committed to the repo since
-    # it is sensitive and used for API calls
+async def run_agent(query: str):
+    """Run the agent with the given query.
+    
+    Args:
+        query (str): The query or instructions for the agent to process.
+        
+    Returns:
+        The result of the agent's execution.
+    """
     load_dotenv()
-    openai_api_key = os.getenv("OPENAI_API_KEY") # Won't work unless we call load_dotenv() first
+    openai_api_key = os.getenv("OPENAI_API_KEY")
 
     llm = OpenAI(model="gpt-4o", api_key=openai_api_key)
     agent = ReActAgent(tools=tools, llm=llm)
     agent.update_prompts({"react_header": PromptTemplate(system_prompt)})
 
     ctx = Context(agent)
-        
     handler = agent.run(query, ctx=ctx)
 
     async for ev in handler.stream_events():
@@ -55,4 +50,4 @@ async def main(query: str):
     
 if __name__ == "__main__":
     query = "Characterize the signals in the audio file located at ./data/hamilton_ave.m4a by using the fft multiple times on iteratively smaller intervals and use Perplexity to look up possible causes of the signals. This is recording of ambient environmental noise, not music. I want you to try to isolate spectral peaks due to things like people speaking, construction noise, electrical circuits humming, etc. Run the fft multiple times on iteratively smaller intervals."
-    asyncio.run(main(query))
+    asyncio.run(run_agent(query))

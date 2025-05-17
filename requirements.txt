@@ -1,4 +1,6 @@
-audio2numpy==0.1.2
+audio2numpy
+rich
+textual
 llama-index==0.12.36
 llama-index-core==0.12.36
 llama-index-llms-openai==0.3.40
