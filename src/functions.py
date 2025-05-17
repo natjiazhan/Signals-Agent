@@ -125,7 +125,10 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, time_bins=10, freq_
     wav_file = input_file_path.with_suffix('.wav')
 
     #Convert to WAV format
-    subprocess.run(['ffmpeg', '-y', '-i', str(input_file_path), str(wav_file)], check=True)
+    subprocess.run(['ffmpeg', '-y', '-i', str(input_file_path), str(wav_file)], 
+                  stdout=subprocess.DEVNULL, 
+                  stderr=subprocess.DEVNULL, 
+                  check=True)
 
     signal, sample_rate = open_audio(str(wav_file))
 
