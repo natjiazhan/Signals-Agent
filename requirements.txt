@@ -1,0 +1,4 @@
+chainlit
+scipy
+librosa
+pyannote.audio
