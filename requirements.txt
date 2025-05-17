@@ -1,4 +1,6 @@
 chainlit
-scipy
+dotenv
 librosa
-pyannote.audio
+llama-index
+scipy
+
