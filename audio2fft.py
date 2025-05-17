@@ -39,21 +39,24 @@ def fft(signal, sample_rate, cutoff_lo, cutoff_hi, bins=20):
         if 0 <= indices[i] < bins:
             binned_power[indices[i]] += power[i]
 
+    #Normalize the binned power
+    binned_power /= np.sum(binned_power)
+
     #output datafram string fromatted as a CSV
     df = pd.DataFrame({
         'Frequency bin': bin_labels,
         'Spectral Power': binned_power
     })
-    return df.to_csv(index=False)
+    return df.to_csv(index=False, float_format="%.3f")
+#Test for FFT function
+##if __name__ == "__main__":
+    ##cutoff_lo = 0
+    ##cutoff_hi = 2000
+    ##bins = 20
+    ##df = fft(signal, sample_rate, cutoff_lo, cutoff_hi, bins)
+    ##print(df)
 
-cutoff_lo = 0
-cutoff_hi = 20000
-bins = 20
-
-df = fft(signal, sample_rate, cutoff_lo, cutoff_hi, bins)
-print(df)
-
-#Test
+#Test for raw audio to signal conversion
 ##if __name__ == "__main__":
     #Extract name from file path
     ##file_name = os.path.splitext(os.path.basename(input_file))[0]
