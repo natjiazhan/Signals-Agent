@@ -88,14 +88,14 @@ def file_meta_data(file_path: str) -> str:
 
 
 # Define the fft tool
-def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, window_sec=0.5, bins=20):
+def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, time_bins=10, freq_bins=20):
     file_path: str
     cutoff_hi: float
     cutoff_lo: float
     start_sec: float
     end_sec: float
-    window_sec: float
-    bins: int
+    time_bins: int
+    freq_bins: int
     """
     Computes a time-frequency spectrogram as a CSV-formatted string.
 
@@ -109,8 +109,8 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, window_sec=0.5, bin
         cutoff_hi: Upper bound of the frequency range to analyze (in Hz).
         start_sec: Start time of the audio segment to analyze (in seconds).
         end_sec: End time of the audio segment to analyze (in seconds).
-        bins: Number of equal-width frequency bins between cutoff_lo and cutoff_hi (e.g., 20).
-        window_sec: Time window size for each FFT (in seconds).
+        time_bins: Number of equal-width time segments between start and end (default: 10).
+        freq_bins: Number of equal-width frequency bins (default: 20).
 
     Returns:
         - A CSV-formatted string where rows are time slices and columns are frequency bins.
@@ -141,18 +141,18 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, window_sec=0.5, bin
     end_sample = int(end_sec * sample_rate)
     signal = signal[start_sample:end_sample]
 
-    #Windowing setup
-    window_size = int(window_sec * sample_rate)
-    num_windows = (len(signal) - window_size) //window_size + 1
+    #Time binning setup
+    total_samples = len(signal)
+    window_size = int(total_samples / time_bins)
 
     #Frequency bin setup
-    bin_edges = np.linspace(cutoff_lo, cutoff_hi, bins + 1)
-    bin_labels = [f"{int(bin_edges[i])}-{int(bin_edges[i+1])}Hz" for i in range(bins)]
+    bin_edges = np.linspace(cutoff_lo, cutoff_hi, freq_bins + 1)
+    bin_labels = [f"{int(bin_edges[i])}-{int(bin_edges[i+1])}Hz" for i in range(freq_bins)]
 
     spectrogram = []
 
     #Slide window over signal
-    for w in range(num_windows):
+    for w in range(time_bins):
         start = w * window_size
         end = start + window_size
         windowed_signal = signal[start:end]
@@ -169,17 +169,17 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, window_sec=0.5, bin
 
         #bin the frequencies and power
         indices = np.digitize(frequency, bin_edges) - 1
-        binned_power = np.zeros(bins)
+        binned_power = np.zeros(freq_bins)
 
         for i in range(len(frequency)):
-            if 0 <= indices[i] < bins:
+            if 0 <= indices[i] < freq_bins:
                 binned_power[indices[i]] += power[i]
 
         #Normalize the binned power
-        binned_power /= np.sum(binned_power)
+        binned_power /= np.sum(binned_power) if np.sum(binned_power) > 0 else 1
 
         # Append time-stamped row
-        time_stamp = round(start_sec + w * window_sec, 2)
+        time_stamp = round(start_sec + w * ((end_sec - start_sec) / time_bins), 2)
         spectrogram.append([f"{time_stamp:.2f}s"] + list(binned_power))
 
     # Create DataFrame and convert to CSV string
@@ -188,7 +188,7 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, window_sec=0.5, bin
 
 if __name__ == "__main__":
     # Example usage
-    csv_str = fft("Hamilton Ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, bins=20)
+    csv_str = fft("hamilton_ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, time_bins=10, freq_bins=20)
     print(csv_str)
 
 ##if __name__ == "__main__":
