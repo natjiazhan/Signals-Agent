@@ -6,7 +6,11 @@ from llama_index.core.agent.workflow import AgentStream, ToolCallResult
 
 import os
 import logging
-logging.basicConfig(level=logging.DEBUG)
+
+# If the logging level is set to DEBUG, it will print all logs
+# which can be overwhelming but useful for seeing the actual
+# HTTP calls
+logging.basicConfig(level=logging.INFO)
 
 # Define tools here; these are just placeholders
 def multiply(a: int, b: int) -> int:
