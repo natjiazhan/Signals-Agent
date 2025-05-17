@@ -54,5 +54,5 @@ async def main(query: str):
     response = await handler
     
 if __name__ == "__main__":
-    query = "Characterize the signals in the audio file located at ./hamilton_ave.m4a by using the fft multiple times on iteratively smaller intervals and use Perplexity to look up possible causes of the signals. This is recording of ambient environmental noise, not music. I want you to try to isolate spectral peaks due to things like people speaking, construction noise, electrical circuits humming, etc. Run the fft multiple times on iteratively smaller intervals."
+    query = "Characterize the signals in the audio file located at ./data/hamilton_ave.m4a by using the fft multiple times on iteratively smaller intervals and use Perplexity to look up possible causes of the signals. This is recording of ambient environmental noise, not music. I want you to try to isolate spectral peaks due to things like people speaking, construction noise, electrical circuits humming, etc. Run the fft multiple times on iteratively smaller intervals."
     asyncio.run(main(query))

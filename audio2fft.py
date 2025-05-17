@@ -5,7 +5,7 @@ from audio2numpy import open_audio
 import numpy as np
 
 # Load the audio file
-input_file = Path("hamilton_ave.m4a")
+input_file = Path("data/hamilton_ave.m4a")
 wav_file = input_file.with_suffix('.wav')
 
 

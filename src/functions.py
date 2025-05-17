@@ -191,7 +191,7 @@ if __name__ == "__main__":
     # Example usage
     #csv_str = fft("hamilton_ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, time_bins=10, freq_bins=20)
     #print(csv_str)
-    print(file_meta_data("hamilton_ave.m4a"))
+    print(file_meta_data("./data/hamilton_ave.m4a"))
 
 ##if __name__ == "__main__":
     # Example usage
