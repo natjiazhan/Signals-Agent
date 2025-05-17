@@ -14,3 +14,4 @@ __pycache__/
 *.whl
 *.dist-info
 *.egg-info/
+*.log
