@@ -5,11 +5,13 @@ from audio2numpy import open_audio
 import numpy as np
 
 # Load the audio file
-input_file = Path("Hamilton Ave.m4a")
+input_file = Path("hamilton_ave.m4a")
 wav_file = input_file.with_suffix('.wav')
 
+
+
 #Convert to WAV format
-subprocess.run(['ffmpeg', '-i', str(input_file), str(wav_file)], check=True)
+subprocess.run(['ffmpeg', '-y', '-i', str(input_file), str(wav_file)], check=True)
 
 signal, sample_rate = open_audio(str(wav_file))
 
