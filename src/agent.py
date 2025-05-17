@@ -6,14 +6,17 @@ from llama_index.core.agent.workflow import AgentStream, ToolCallResult
 from llama_index.core.agent.react.formatter import ReActChatFormatter
 from functions import search_perplexity
 from prompts import system_prompt
-
+from tracing import setup_tracing
 import os
 import logging
+
+# Passes all the API calls to the OpenTelemetry collector 
+setup_tracing()
 
 # If the logging level is set to DEBUG, it will print all logs
 # which can be overwhelming but useful for seeing the actual
 # HTTP calls
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 # Define tools here; these are just placeholders
 def multiply(a: int, b: int) -> int:
