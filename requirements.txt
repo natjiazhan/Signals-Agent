@@ -4,4 +4,7 @@ librosa
 llama-index
 openai
 scipy
+numpy
+audio2numpy
+
 
