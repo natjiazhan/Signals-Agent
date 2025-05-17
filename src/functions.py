@@ -49,7 +49,7 @@ def search_perplexity(
 if __name__ == "__main__":
     # Example usage
     query = "Who won the 2024 Men's Olympic soccer finals match"
-    answer = get_perplexity_answer(query)
+    answer = search_perplexity(query)
     print(answer)
 
 
