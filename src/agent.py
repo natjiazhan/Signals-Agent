@@ -1,14 +1,15 @@
 from dotenv import load_dotenv
 from llama_index.llms.openai import OpenAI
-from llama_index.core.agent.workflow import ReActAgent
+from llama_index.core.agent.workflow import FunctionAgent, ReActAgent
 from llama_index.core.workflow import Context
 from llama_index.core.agent.workflow import AgentStream, ToolCallResult
-from llama_index.core.agent.react.formatter import ReActChatFormatter
-from functions import search_perplexity
-from prompts import system_prompt
+from functions import search_perplexity, fft
 from tracing import setup_tracing
+from prompts import system_prompt
 import os
 import logging
+import asyncio
+
 
 # Passes all the API calls to the OpenTelemetry collector 
 setup_tracing()
@@ -18,22 +19,13 @@ setup_tracing()
 # HTTP calls
 logging.basicConfig(level=logging.INFO)
 
-# Define tools here; these are just placeholders
-def multiply(a: int, b: int) -> int:
-    """Multiply two integers and returns the result integer"""
-    return a * b
-
-def add(a: int, b: int) -> int:
-    """Add two integers and returns the result integer"""
-    return a + b
-
 # Note that tools are just functions, but their return values should have 
 # a format which can be converted to a short-ish string (<10,000 characters, ideally)
 # Examples of return types that would be good: dictionary, list, string, file paths
 # Bad types: Numpy array, pandas dataframe (unless calling .to_csv() or .to_json() on them)
-tools = [multiply, add, search_perplexity]
+tools = [fft, search_perplexity]
 
-async def main():
+async def main(query: str):
 
     # Set up the OpenAI API key
     # This key is used to authenticate requests to the OpenAI API
@@ -45,15 +37,9 @@ async def main():
     openai_api_key = os.getenv("OPENAI_API_KEY") # Won't work unless we call load_dotenv() first
 
     llm = OpenAI(model="gpt-4o", api_key=openai_api_key)
-    formatter = ReActChatFormatter.from_defaults()
-    formatter.system_header = system_prompt
-    agent = ReActAgent(tools=tools, llm=llm, formatter=formatter)
-
-    # Create a context to store the conversation history/session state
+    agent = ReActAgent(tools=tools, llm=llm)
     ctx = Context(agent)
-    
-    query = "Find the product of Earth's population with the number of atoms in an apple"
-    
+        
     handler = agent.run(query, ctx=ctx)
 
     async for ev in handler.stream_events():
@@ -65,5 +51,5 @@ async def main():
     response = await handler
     
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    query = "Characterize the signals in the audio file located at ./hamilton_ave.m4a by using the fft multiple times on iteratively smaller intervals and use Perplexity to look up possible causes of the signals. This is recording of ambient environmental noise, not music. I want you to try to isolate spectral peaks due to things like people speaking, construction noise, electrical circuits humming, etc. Run the fft multiple times on iteratively smaller intervals."
+    asyncio.run(main(query))
