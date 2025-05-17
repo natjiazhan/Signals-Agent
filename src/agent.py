@@ -3,6 +3,7 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.agent.workflow import ReActAgent
 from llama_index.core.workflow import Context
 from llama_index.core.agent.workflow import AgentStream, ToolCallResult
+from functions import search_perplexity
 
 import os
 import logging
@@ -17,7 +18,6 @@ def multiply(a: int, b: int) -> int:
     """Multiply two integers and returns the result integer"""
     return a * b
 
-
 def add(a: int, b: int) -> int:
     """Add two integers and returns the result integer"""
     return a + b
@@ -26,7 +26,7 @@ def add(a: int, b: int) -> int:
 # a format which can be converted to a short-ish string (<10,000 characters, ideally)
 # Examples of return types that would be good: dictionary, list, string, file paths
 # Bad types: Numpy array, pandas dataframe (unless calling .to_csv() or .to_json() on them)
-tools = [multiply, add]
+tools = [multiply, add, search_perplexity]
 
 async def main():
 
@@ -45,7 +45,7 @@ async def main():
     # Create a context to store the conversation history/session state
     ctx = Context(agent)
     
-    query = "What is 20+(2*4)*(7+2)*1231231+(1231823891237*123123)?"
+    query = "Find the product of Earth's population with the number of atoms in an apple"
     
     handler = agent.run(query, ctx=ctx)
 
