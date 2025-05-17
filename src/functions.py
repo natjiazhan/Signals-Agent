@@ -55,7 +55,8 @@ def search_perplexity(
 # Define the file meta data tool
 def file_meta_data(file_path: str) -> str:
     """
-    Extracts metadata from an audio file using ffprobe.
+    Extracts metadata from an audio file using ffprobe. Use this at the beginning of analysis
+    to characterize the audio file and understand its properties.
     
     Args:
         file_path: Path to the input audio file (e.g., .m4a).
@@ -66,11 +67,11 @@ def file_meta_data(file_path: str) -> str:
         - 'Value': Corresponding value of the property
     """
     # Use ffprobe to extract metadata
-    result = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration,bit_rate', '-of', 'default=noprint_wrappers=1:nokey=1', file_path], capture_output=True, text=True)
+    result = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration,bit_rate,size', '-of', 'default=noprint_wrappers=1:nokey=1', file_path], capture_output=True, text=True)
     
     # Parse the output
     lines = result.stdout.strip().split('\n')
-    properties = ['Duration (seconds)', 'Bit Rate (kbps)']
+    properties = ['Duration (seconds)', 'Bit Rate (kbps)', 'Size (bytes)']
     
     # Create a DataFrame and return as CSV
     df = pd.DataFrame({
@@ -188,8 +189,9 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, time_bins=10, freq_
 
 if __name__ == "__main__":
     # Example usage
-    csv_str = fft("hamilton_ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, time_bins=10, freq_bins=20)
-    print(csv_str)
+    #csv_str = fft("hamilton_ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, time_bins=10, freq_bins=20)
+    #print(csv_str)
+    print(file_meta_data("./data/hamilton_ave.m4a"))
 
 ##if __name__ == "__main__":
     # Example usage
