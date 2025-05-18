@@ -1,3 +1,4 @@
+arize-phoenix
 audio2numpy
 rich
 textual
@@ -10,13 +11,6 @@ openinference-instrumentation-llama-index==4.2.1
 opentelemetry-exporter-otlp-proto-http==1.31.1
 opentelemetry-sdk==1.31.1
 pandas==2.2.3
-arize-phoenix
-<<<<<<< Updated upstream
 python-dotenv==1.1.0
 pyaudio
-arize-phoenix
 python-dotenv==1.1.0
-pyaudio
-=======
-python-dotenv==1.1.0
->>>>>>> Stashed changes
