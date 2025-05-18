@@ -5,6 +5,7 @@ textual
 llama-index==0.12.36
 llama-index-core==0.12.36
 llama-index-llms-openai==0.3.40
+matplotlib
 numpy==2.2.5
 openai==1.79.0
 openinference-instrumentation-llama-index==4.2.1
