@@ -8,6 +8,11 @@ Your initial search should cover the entire range of possible frequencies, from 
 
 - For initial `fft` usage, use a very broad range of frequencies (e.g. 0-2000 Hz) to get a general idea of the signal. Use the sampling rate of the audio file in conjunction with the Nyquist theorem to determine the range of frequencies you can analyze.
 
+- You should also use the `fft` tool with freq_bins=1 and time_bins > 10 to get a sense of the total energy of the audio file over time.
+
+- If some time periods show noticeable peaks in the energy, you should use the `fft` tool to focus on those time periods as well.
+
+- Only answer in English
 
 You have access to the following tools:
 {tool_desc}

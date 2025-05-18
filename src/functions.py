@@ -107,6 +107,8 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5,
     This function converts an input audio file to WAV, extracts a segment between start_sec and end_sec,
     computes the FFT for each time window, bins the spectral power into frequency bins, and returns
     a CSV-formatted string representing time-frequency energy.
+    
+    This can also be used to compute the total energy of the audio file over time by setting freq_bins to 1.
 
     Args:
         file_path: Path to the input audio file (e.g., .m4a).
@@ -118,7 +120,7 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5,
         freq_bins: Number of equal-width frequency bins (default: 20).
 
     Returns:
-        - A CSV-formatted string where rows are time slices and columns are frequency bins. Rows are normalized to sum to one, i.e. we normalize the spectral energy in each time slice to 1.
+        - A CSV-formatted string where rows are time slices and columns are frequency bins. If freq_bins is 1, then the output is a single column of spectral energy. Otherwise, rows are normalized to sum to one, i.e. we normalize the spectral energy in each time slice to 1.
 
     Notes:
         - Stereo audio is automatically converted to mono.
@@ -189,7 +191,8 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5,
                 binned_power[indices[i]] += power[i]
 
         #Normalize the binned power
-        binned_power /= np.sum(binned_power) if np.sum(binned_power) > 0 else 1
+        if freq_bins > 1:
+            binned_power /= np.sum(binned_power) if np.sum(binned_power) > 0 else 1
 
         # Append time range label
         start_time = round(start_sec + w * ((end_sec - start_sec) / time_bins), 2)
@@ -200,34 +203,6 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5,
     # Create DataFrame and convert to CSV string
     df = pd.DataFrame(spectrogram, columns=["Time"] + bin_labels)
     return df.to_csv(index=False, float_format="%.3f")
-
-if __name__ == "__main__":
-    # Example usage
-    csv_str = fft("data/audio1.mp3", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, time_bins=10, freq_bins=20)
-    print(csv_str)
-
-##if __name__ == "__main__":
-    # Example usage
-    ##query = "Who won the 2024 Men's Olympic soccer finals match"
-    ##answer = search_perplexity(query)
-    ##print(answer)
-
-
-#Test for spectrogram function
-##if __name__ == "__main__":
-    ##csv_str = fft("Hamilton Ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, bins=20)
-    ##print(csv_str)
-
-#Test for raw audio to signal conversion
-##if __name__ == "__main__":
-    #Extract name from file path
-    ##file_name = os.path.splitext(os.path.basename(input_file))[0]
-
-    #Create output file name
-    ##output_file = f"signal_{file_name}.csv"
-
-    #Output the signal to a CSV file
-    ##np.savetxt(output_file, signal, delimiter=",", header=f"SampleRate: {sample_rate}", comments='')
 
 def record_audio(duration=10, sample_rate=44100, channels=1, format=pyaudio.paInt16, chunk=1024):
     """
@@ -283,3 +258,8 @@ def record_audio(duration=10, sample_rate=44100, channels=1, format=pyaudio.paIn
     wf.close()
     
     return filepath
+
+if __name__ == "__main__":
+    # Example usage
+    csv_str = fft("data/audio1.mp3", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, time_bins=60, freq_bins=1)
+    print(csv_str)
