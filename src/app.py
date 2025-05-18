@@ -4,6 +4,7 @@ from rich.prompt import Prompt, IntPrompt
 from pathlib import Path
 import asyncio
 from agent import run_agent
+from functions import record_audio
 
 # Initialize rich console
 console = Console()
@@ -33,8 +34,35 @@ def main():
     console.print("\n🎵 Welcome to the Audio Analysis Terminal!\n", style="bold blue")
     
     while True:
-        # Select audio file
-        selected_file = select_audio_file()
+        # Ask user if they want to use an existing file or record a new one
+        console.print("\n1. Use existing audio file\n2. Record new audio", style="bold blue")
+        source_choice = Prompt.ask(
+            "Choice",
+            choices=["1", "2"],
+            default="1"
+        )
+        
+        selected_file = None
+        
+        if source_choice == "1":
+            # Select existing audio file
+            console.print("Using existing audio file", style="bold blue")
+            selected_file = select_audio_file()
+        else:
+            # Record new audio
+            console.print("\nRecording new audio", style="bold blue")
+            
+            # Ask for recording duration
+            duration = IntPrompt.ask(
+                "Enter recording duration in seconds",
+                default=10
+            )
+            
+            # Record audio
+            console.print("\nPreparing to record...", style="bold yellow")
+            selected_file = record_audio(duration=duration)
+            console.print(f"\nRecording saved to {selected_file}", style="bold green")
+        
         if not selected_file:
             break
             

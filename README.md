@@ -2,8 +2,11 @@
 Repo for Hackathon Project
 
 ## Getting started
-Before running the project make sure ffmpeg is installed in your system:
-'brew install ffmpeg'
+Before running the project make sure ffmpeg and portaudio are installed in your system:
+```
+brew install ffmpeg
+brew install portaudio
+```
 
 Clone this repo and create a virtual environment using the following commands:
 ```
