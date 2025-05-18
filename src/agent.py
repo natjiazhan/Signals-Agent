@@ -35,7 +35,7 @@ async def run_agent(query: str, console: Console = Console()):
     load_dotenv()
     openai_api_key = os.getenv("OPENAI_API_KEY")
 
-    llm = OpenAI(model="gpt-4o", api_key=openai_api_key)
+    llm = OpenAI(model="o3-mini", api_key=openai_api_key)
     agent = ReActAgent(tools=tools, llm=llm)
     agent.update_prompts({"react_header": PromptTemplate(system_prompt)})
 
