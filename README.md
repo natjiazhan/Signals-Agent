@@ -1,3 +1,5 @@
+![Spectrogram Banner](./spectrogram-banner.gif)
+
 # Signals Agent
 Project for the Proving Ground: Agentic Startup RAG-a-thon
 
