@@ -7,7 +7,7 @@ Before running the project make sure ffmpeg is installed in your system:
 
 Clone this repo and create a virtual environment using the following commands:
 ```
-mkdir .venv && python3 -m venv .venv
+mkdir .venv && python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -e .
 ```
