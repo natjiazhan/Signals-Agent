@@ -1,11 +1,11 @@
 arize-phoenix
-audio2numpy
-rich
-textual
+audio2numpy==0.1.2
+rich==14.0.0
+textual==3.2.0
 llama-index==0.12.36
 llama-index-core==0.12.36
 llama-index-llms-openai==0.3.40
-matplotlib
+matplotlib==3.10.3
 numpy==2.2.5
 openai==1.79.0
 openinference-instrumentation-llama-index==4.2.1
@@ -13,5 +13,4 @@ opentelemetry-exporter-otlp-proto-http==1.31.1
 opentelemetry-sdk==1.31.1
 pandas==2.2.3
 python-dotenv==1.1.0
-pyaudio
-python-dotenv==1.1.0
+pyaudio==0.2.14
