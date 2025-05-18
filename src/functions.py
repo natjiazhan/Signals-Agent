@@ -13,7 +13,7 @@ import time
 
 load_dotenv()
 
-pplx_system_prompt = "You are a helpful assistant."
+pplx_system_prompt = "You are a helpful assistant. All answers should be in English regardless of the language of the question. " \
 
 def search_perplexity(
     query: str,
@@ -268,5 +268,5 @@ def record_audio(duration=10, sample_rate=44100, channels=1, format=pyaudio.paIn
 
 if __name__ == "__main__":
     # Example usage
-    csv_str = fft("data/audio1.mp3", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=10, time_bins=60, freq_bins=1)
+    csv_str = fft("data/hamilton_ave.m4a", cutoff_lo=0, cutoff_hi=2000, start_sec=0, end_sec=20, time_bins=10, freq_bins=20)
     print(csv_str)

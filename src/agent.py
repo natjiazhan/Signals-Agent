@@ -95,5 +95,5 @@ async def run_agent(query: str, console: Console = Console()):
     response = await handler
     
 if __name__ == "__main__":
-    query = "Characterize the signals in the audio file located at ./data/hamilton_ave.m4a by using the fft multiple times on iteratively smaller intervals and use Perplexity to look up possible causes of the signals. This is recording of ambient environmental noise, not music. I want you to try to isolate spectral peaks due to things like people speaking, construction noise, electrical circuits humming, etc. Run the fft multiple times on iteratively smaller intervals."
+    query = "Characterize the signals in the audio file located at ./data/audio3.mp3 by using the fft at 20 time bins and 20 frequency bins and use Perplexity to look up possible causes of the signals. This audio is from a video game. Try to determine what the sources of the audio are. Run the fft multiple times on iteratively smaller intervals. Answer in English."
     asyncio.run(run_agent(query))
