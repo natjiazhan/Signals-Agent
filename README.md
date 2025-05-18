@@ -31,3 +31,8 @@ You can also run `nohup python -m phoenix.server.main serve > tracing.log &` to 
 This will start up a dashboard which can be viewed at http://0.0.0.0:6006/projects.
 
 To run the agent, run `python src/agent.py`
+
+## Dependencies
+
+This project uses the [`soundata`](https://github.com/soundata/soundata) library for loading and managing audio datasets.
+
