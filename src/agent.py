@@ -3,7 +3,7 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.agent.workflow import FunctionAgent, ReActAgent
 from llama_index.core.workflow import Context
 from llama_index.core.agent.workflow import AgentStream, ToolCallResult
-from functions import search_perplexity, fft, file_meta_data
+from functions import search_perplexity, fft, file_meta_data, load_audio_clip
 from tracing import setup_tracing
 from prompts import system_prompt
 import os
@@ -21,7 +21,7 @@ setup_tracing()
 logging.basicConfig(level=logging.INFO)
 
 # Available tools
-tools = [fft, search_perplexity, file_meta_data]
+tools = [fft, search_perplexity, file_meta_data, load_audio_clip]
 
 async def run_agent(query: str, console: Console = Console()):
     """Run the agent with the given query.
@@ -81,5 +81,5 @@ async def run_agent(query: str, console: Console = Console()):
     response = await handler
     
 if __name__ == "__main__":
-    query = "Characterize the signals in the audio file located at ./data/hamilton_ave.m4a by using the fft multiple times on iteratively smaller intervals and use Perplexity to look up possible causes of the signals. This is recording of ambient environmental noise, not music. I want you to try to isolate spectral peaks due to things like people speaking, construction noise, electrical circuits humming, etc. Run the fft multiple times on iteratively smaller intervals."
+    query = "Use load_audio_clip to get the clip with ID 'fold5_urbansound8k_133.wav' and write it to a file. Then run fft on that audio file using multiple decreasing time intervals to isolate frequency peaks. Use Perplexity to investigate what may cause peaks from audio sources."
     asyncio.run(run_agent(query))

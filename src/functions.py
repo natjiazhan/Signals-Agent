@@ -6,10 +6,12 @@ import pandas as pd
 from pathlib import Path
 from audio2numpy import open_audio
 import numpy as np
+import soundata
+from scipy.io.wavfile import write as wav_write
 
 load_dotenv()
 
-pplx_system_prompt = "You are a helpful assistant."
+pplx_system_prompt = "You are a helpful assistant. All answers must be in English, regardless of the source material or topic."
 
 def search_perplexity(
     query: str,
@@ -50,6 +52,35 @@ def search_perplexity(
         return f"{content}\n\nSources:\n{sources}"
     
     return content
+
+# Define the load audio clip function
+def load_audio_clip(clip_id: str) -> str:
+    """
+    Loads an audio clip from ./data if it exists, or uses soundata to load and save it there.
+    
+    Args:
+        clip_id: The filename or soundata clip ID (e.g., 'fold5_urbansound8k_133.wav')
+        
+    Returns:
+        Path to the saved audio file
+    """
+    data_path = f"./data/{clip_id}"
+    if os.path.exists(data_path):
+        return data_path
+
+    # Try loading from soundata
+    dataset = soundata.initialize('urbansound8k')
+    dataset.download()
+    dataset.validate()
+
+    if clip_id not in dataset.clip_ids:
+        raise FileNotFoundError(f"Clip ID '{clip_id}' not found in soundata UrbanSound8K dataset.")
+
+    clip = dataset.clip(clip_id)
+    audio, sr = clip.audio
+    sf.write(data_path, audio, sr)  # Save to ./data for future reuse
+
+    return data_path
 
 
 # Define the file meta data tool
@@ -123,7 +154,7 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5,
 
     # Load the audio file
     input_file_path = Path(file_path)
-    wav_file = input_file_path.with_suffix('.wav')
+    wav_file = input_file_path.with_name(f"{input_file_path.stem}_converted.wav")
 
     #Convert to WAV format
     subprocess.run(['ffmpeg', '-y', '-i', str(input_file_path), str(wav_file)], 

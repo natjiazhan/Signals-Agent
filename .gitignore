@@ -19,3 +19,4 @@ __pycache__/
 *.wav
 
 data/*.wav
+agentic_hackathon_project.egg-info/PKG-INFO
