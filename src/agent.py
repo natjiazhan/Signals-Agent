@@ -3,6 +3,7 @@ from llama_index.llms.openai import OpenAI
 from llama_index.core.agent.workflow import FunctionAgent, ReActAgent
 from llama_index.core.workflow import Context
 from llama_index.core.agent.workflow import AgentStream, ToolCallResult
+from llama_index.core.tools.types import ToolOutput
 from functions import search_perplexity, fft, file_meta_data
 from tracing import setup_tracing
 from prompts import system_prompt
@@ -12,13 +13,14 @@ import asyncio
 from llama_index.core import PromptTemplate
 from rich.console import Console
 from rich.panel import Panel
+from format import format_fft_output_as_rich_table
 
 
 # Passes all the API calls to the OpenTelemetry collector 
 setup_tracing()
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 
 # Available tools
 tools = [fft, search_perplexity, file_meta_data]
@@ -56,15 +58,27 @@ async def run_agent(query: str, console: Console = Console()):
                     expand=False,
                 ))
                 agent_buffer = ""  # Clear the buffer
-                
-            # Then print the tool call result
-            console.print(Panel(
-                f"Used tool `{ev.tool_name}` with {ev.tool_kwargs}\nReturned: {ev.tool_output}",
-                title="Tool Result",
-                style="dim",
-                border_style="dim",
-                expand=False,
-            ))
+            
+            if ev.tool_name == 'fft' and isinstance(ev.tool_output, ToolOutput) and isinstance(ev.tool_output.content, str):
+                format_fft_output_as_rich_table(
+                    csv_string=ev.tool_output.content,
+                    console=console,
+                    tool_name=ev.tool_name,
+                    tool_kwargs=ev.tool_kwargs
+                )
+            else:
+                # Original way to print tool call result
+                output_to_display = ev.tool_output
+                if isinstance(ev.tool_output, ToolOutput):
+                    output_to_display = ev.tool_output.content
+
+                console.print(Panel(
+                    f"Used tool `{ev.tool_name}` with {ev.tool_kwargs}\nReturned: {output_to_display}",
+                    title="Tool Result",
+                    style="dim",
+                    border_style="dim",
+                    expand=False,
+                ))
         elif isinstance(ev, AgentStream):
             # Accumulate agent text instead of printing directly
             agent_buffer += ev.delta

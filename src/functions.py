@@ -93,7 +93,7 @@ def file_meta_data(file_path: str) -> str:
 
 
 # Define the fft tool
-def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5, freq_bins=15):
+def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5, freq_bins=15, verbose=False):
     file_path: str
     cutoff_hi: float
     cutoff_lo: float
@@ -135,10 +135,17 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5,
         wav_file = input_file_path
     else:
         wav_file = input_file_path.with_suffix('.wav')
+        if not verbose:
+            stdout = subprocess.DEVNULL
+            stderr = subprocess.DEVNULL
+        else:
+            stdout = None
+            stderr = None
+            
         # Convert to WAV format
         subprocess.run(['ffmpeg', '-y', '-i', str(input_file_path), str(wav_file)], 
-                      #stdout=subprocess.DEVNULL, 
-                      #stderr=subprocess.DEVNULL, 
+                      stdout=stdout,
+                      stderr=stderr,
                       check=True)
 
     signal, sample_rate = open_audio(str(wav_file))
