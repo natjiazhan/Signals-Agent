@@ -89,7 +89,7 @@ def file_meta_data(file_path: str) -> str:
 
 
 # Define the fft tool
-def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, time_bins=10, freq_bins=20):
+def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5, freq_bins=15):
     file_path: str
     cutoff_hi: float
     cutoff_lo: float
@@ -114,7 +114,7 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, time_bins=10, freq_
         freq_bins: Number of equal-width frequency bins (default: 20).
 
     Returns:
-        - A CSV-formatted string where rows are time slices and columns are frequency bins.
+        - A CSV-formatted string where rows are time slices and columns are frequency bins. Rows are normalized to sum to one, i.e. we normalize the spectral energy in each time slice to 1.
 
     Notes:
         - Stereo audio is automatically converted to mono.
@@ -139,6 +139,10 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec, end_sec, time_bins=10, freq_
 
     # Trim the signal to the specified time range
     start_sample = int(start_sec * sample_rate)
+    
+    if not end_sec:
+        end_sec = len(signal) / sample_rate
+        
     end_sample = int(end_sec * sample_rate)
     signal = signal[start_sample:end_sample]
 

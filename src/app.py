@@ -39,7 +39,7 @@ def main():
             break
             
         # Get instructions
-        default_instructions = f"Analyze the audio file at {selected_file} and perform a spectral analysis"
+        default_instructions = f"Analyze the audio file at {selected_file} and perform a spectral analysis to characterize processes near me"
         instructions = Prompt.ask("Enter analysis instructions", default=default_instructions)
         
         # Run analysis
