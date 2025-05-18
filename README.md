@@ -1,5 +1,5 @@
-# Agentic-Hackathon-Project
-Repo for Hackathon Project
+# Signals Agent
+Project for the Proving Ground: Agentic Startup RAG-a-thon
 
 ## Getting started
 Before running the project make sure ffmpeg and portaudio are installed in your system:
