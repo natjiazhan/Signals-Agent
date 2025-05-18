@@ -14,6 +14,9 @@ pip install -e .
 
 Then, create a `.env` file in this folder and make sure you set `OPENAI_API_KEY="sk-..."` as well as `PPLX_API_KEY`
 
+## Data Location
+Take note that all audio files and data are located in the /data folder.
+
 ## Running the agent workflow
 Before running the agent, you may want to start the Phoenix observability application with the following command:
 ```
