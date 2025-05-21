@@ -1,0 +1,33 @@
+{
+  "hamilton_ave.m4a": {
+    "summary": "This is an audio clip taken at an eventspace with construction next door. This clip contains several human conversations in the background and construction noise from a jackhammer. Background noise from an HVAC system is also present.",
+    "structured": {
+      "source_type": ["machine", "human"]
+    }
+  },
+  "audio1.mp3": {
+    "summary": "This is an audio clip taken at a flowing creek in a forest. The clip contains the sound of water flowing over rocks and the rustling of leaves in the wind.",
+    "structured": {
+      "source_type": ["nature"]
+    }
+  },
+  "audio2.mp3": {
+    "summary": "This clip contains synthesized tones resembling video game sound effects. There are human voicelines, footsteps, lots of gunfire, drone flight sounds, mechanical beeps and clicks, and explosions in the background.",
+    "structured": {
+      "source_type": ["synthesized", "video game"]
+    }
+  },
+  "audio3.mp3": {
+    "summary": "This clip contains synthesized piano music with a soft and calming melody.",
+    "structured": {
+      "source_type": ["synthesized", "music"]
+    }
+  },
+  "audio4.mp3": {
+    "summary": "This clip contains human speech in a crowded event space. The background noise includes chatter with several conversations in the background.",
+    "structured": {
+      "source_type": ["human"]
+    }
+  }
+}
+

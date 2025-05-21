@@ -1,0 +1,8 @@
+{
+  "summary": "This audio clip exhibits persistent, dominant low-frequency energy across its duration, with a consistent peak in the 75\u2013100 Hz range. The narrow and stable spectral profile strongly indicates that the sound is synthesized rather than produced by natural or human sources.",
+  "structured": {
+    "source_type": [
+      "synthesized"
+    ]
+  }
+}

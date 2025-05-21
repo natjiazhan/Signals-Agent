@@ -10,6 +10,7 @@ import pyaudio
 import wave
 import uuid
 import time
+import json
 
 load_dotenv()
 
@@ -210,6 +211,32 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5,
     # Create DataFrame and convert to CSV string
     df = pd.DataFrame(spectrogram, columns=["Time"] + bin_labels)
     return df.to_csv(index=False, float_format="%.3f")
+
+def save_agent_output(file_name, summary_text, source_types):
+    """
+    Save agent output in the required JSON format for evaluation.
+
+    Args:
+        file_name (str): Path to the input audio file (e.g. data/audio1.mp3)
+        summary_text (str): Agent-generated description of the audio
+        source_types (list[str]): List of source type labels
+    """
+    output = {
+        "summary": summary_text,
+        "structured": {
+            "source_type": source_types
+        }
+    }
+
+    os.makedirs("outputs", exist_ok=True)
+
+    base_name = os.path.basename(file_name).replace(".m4a", ".json").replace(".mp3", ".json")
+    out_path = os.path.join("outputs", base_name)
+
+    with open(out_path, "w") as f:
+        json.dump(output, f, indent=2)
+
+    print(f"Saved prediction to: {out_path}")
 
 def record_audio(duration=10, sample_rate=44100, channels=1, format=pyaudio.paInt16, chunk=1024):
     """

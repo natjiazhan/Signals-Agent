@@ -4,7 +4,7 @@ from llama_index.core.agent.workflow import FunctionAgent, ReActAgent
 from llama_index.core.workflow import Context
 from llama_index.core.agent.workflow import AgentStream, ToolCallResult
 from llama_index.core.tools.types import ToolOutput
-from functions import search_perplexity, fft, file_meta_data
+from functions import search_perplexity, fft, file_meta_data, save_agent_output
 from tracing import setup_tracing
 from prompts import system_prompt
 import os
@@ -23,7 +23,7 @@ setup_tracing()
 logging.basicConfig(level=logging.WARNING)
 
 # Available tools
-tools = [fft, search_perplexity, file_meta_data]
+tools = [fft, search_perplexity, file_meta_data, save_agent_output]
 
 async def run_agent(query: str, console: Console = Console()):
     """Run the agent with the given query.
@@ -95,5 +95,31 @@ async def run_agent(query: str, console: Console = Console()):
     response = await handler
     
 if __name__ == "__main__":
-    query = "Characterize the signals in the audio file located at ./data/audio3.mp3 by using the fft at 20 time bins and 20 frequency bins and use Perplexity to look up possible causes of the signals. This audio is from a video game. Try to determine what the sources of the audio are. Run the fft multiple times on iteratively smaller intervals. Answer in English."
+    query = """
+    Instruction: At the end of your analysis, call the `save_agent_output` function with the following format:
+
+    {
+        "summary": "...",
+        "structured": {
+            "source_type": ["human", "synthesized"]
+        }
+    }
+
+    Use only these source_type categories: ["human", "synthesized", "machine", "nature", "video game"]. Do not invent your own.
+
+    Example Input:
+    This audio shows dominant low-frequency peaks near 392 Hz, with narrow tonal stability over time. It resembles synthetic tones found in video game environments.
+
+    Example Output:
+    {
+        "summary": "This clip contains synthesized tones resembling video game sound effects. There are stable peaks near 392 Hz consistent with tonal, digital sources.",
+        "structured": {
+            "source_type": ["synthesized", "video game"]
+        }
+    }
+
+
+    Now analyze: ./data/audio1.mp3 using fft (20x20 bins) and Perplexity. Describe the spectral content and determine likely sources. End by calling `save_agent_output` with your result.
+    """
+
     asyncio.run(run_agent(query))
