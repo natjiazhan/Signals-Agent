@@ -33,15 +33,25 @@ def llm_grade_with_zephyr(true_labels, pred_labels):
         return fuzzy_compare_source_types(pred_labels, true_labels)[2]
 
     prompt = f"""
-        You are a grading assistant. Given predicted and ground truth audio source types, respond strictly with either PASS or FAIL.
+    You are a grading assistant for an audio classification task.
 
-        Ground truth labels: {true_labels}
-        Predicted labels: {pred_labels}
+    Instructions:
+    - You must grade the agent's prediction against the correct answer.
+    - You must return ONLY the word PASS or FAIL — nothing else.
+    - A PASS is only valid if:
+      - Every predicted label matches a label in the ground truth (semantically or literally),
+      - No extra or unrelated labels are in the prediction,
+      - All ground truth labels are covered.
 
-        If all predicted labels are equivalent to the ground truth and no predicted labels are present as ground truth, return PASS.
-        If not, return FAIL.
-        Response:
-        """
+    If these conditions are not perfectly met, return FAIL.
+
+    Evaluate:
+
+    Ground truth labels: {true_labels}
+    Predicted labels: {pred_labels}
+
+    Result:
+    """
 
     try:
         response = requests.post(
