@@ -1,0 +1,8 @@
+{
+  "summary": "The analyzed clip shows dominant low-frequency energy (below 2000 Hz) that is typical of urban machine noise, such as vehicle engines and traffic. A transient event in the 2000\u20134000 Hz range suggests the presence of a brief sound event (e.g., a car horn or similar urban transient). Overall, the spectral profile strongly indicates a machine-generated urban soundscape.",
+  "structured": {
+    "source_type": [
+      "machine"
+    ]
+  }
+}

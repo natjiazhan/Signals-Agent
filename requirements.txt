@@ -1,3 +1,4 @@
+accelerate
 arize-phoenix
 audio2numpy==0.1.2
 llama-index==0.12.36
@@ -12,5 +13,7 @@ opentelemetry-sdk==1.31.1
 pandas==2.2.3
 python-dotenv==1.1.0
 pyaudio==0.2.14
+requests
 rich==14.0.0
 textual==3.2.0
+transformers

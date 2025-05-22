@@ -119,7 +119,7 @@ if __name__ == "__main__":
     }
 
 
-    Now analyze: ./data/audio1.mp3 using fft (20x20 bins) and Perplexity. Describe the spectral content and determine likely sources. End by calling `save_agent_output` with your result.
+    Now analyze: ./data/audio4.mp3 using fft (20x20 bins) and Perplexity. Describe the spectral content and determine likely sources. End by calling `save_agent_output` with your result.
     """
 
     asyncio.run(run_agent(query))

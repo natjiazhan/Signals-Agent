@@ -1,0 +1,9 @@
+{
+  "summary": "This audio clip exhibits dominant low-frequency energy concentrated primarily between 50 and 100 Hz, with a stable spectral envelope over time. The spectral profile is consistent with an electronically synthesized drone, typical in digital sound designs and video game environments.",
+  "structured": {
+    "source_type": [
+      "synthesized",
+      "video game"
+    ]
+  }
+}
