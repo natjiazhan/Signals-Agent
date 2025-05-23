@@ -1,36 +1,17 @@
 import os
 import json
-import requests
-from difflib import SequenceMatcher
 from dotenv import load_dotenv
+from llama_index.llms.openai import OpenAI
 
 load_dotenv()
 
-HF_API_TOKEN = os.getenv("HF_API_TOKEN")
-LLM_ENDPOINT = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
 GROUND_TRUTH_FILE = "eval.json"
 OUTPUT_DIR = "outputs/"
 
-def text_similarity(a, b):
-    return SequenceMatcher(None, a, b).ratio()
+llm = OpenAI(model="o3-mini")
 
-def fuzzy_match(a, b, threshold=0.7):
-    return SequenceMatcher(None, a.lower(), b.lower()).ratio() >= threshold
 
-def fuzzy_compare_source_types(pred_types, true_types):
-    matched = set()
-    for true_label in true_types:
-        for pred_label in pred_types:
-            if fuzzy_match(true_label, pred_label):
-                matched.add(true_label)
-                break
-    score = len(matched) / len(true_types) if true_types else 0
-    return matched, score, score == 1.0
-
-def llm_grade_with_zephyr(true_labels, pred_labels):
-    if HF_API_TOKEN is None:
-        print("HF_API_TOKEN not found. Falling back to fuzzy matching.")
-        return fuzzy_compare_source_types(pred_labels, true_labels)[2]
+def llm_grade_source_types(true_labels, pred_labels):
 
     prompt = f"""
     You are a grading assistant for an audio classification task.
@@ -54,31 +35,35 @@ def llm_grade_with_zephyr(true_labels, pred_labels):
     """
 
     try:
-        response = requests.post(
-            LLM_ENDPOINT,
-            headers={"Authorization": f"Bearer {HF_API_TOKEN}"},
-            json={"inputs": prompt},
-        )
-        result = response.json()
-
-        if isinstance(result, list) and "generated_text" in result[0]:
-            output_text = result[0]["generated_text"].upper()
-            return "PASS" in output_text
-        elif "error" in result:
-            print(f"LLM API error: {result['error']}")
-        else:
-            print(f"Unexpected LLM API response: {result}")
-
+        response = llm.complete(prompt)
+        output = response.text.strip().upper()
+        return "PASS" in output
     except Exception as e:
-        print("LLM evaluation failed. Falling back to fuzzy matching:", e)
+        print("LLM evaluation failed.", e)
+        return False
+    
+def llm_grade_summary(true_summary, pred_summary):
+    prompt = f"""
+    You are a grading assistant for an audio classification task.
 
-    return fuzzy_compare_source_types(pred_labels, true_labels)[2]
+    Instructions:
+    - Evaluate the semantic similarity between the agent's predicted summary and the ground truth summary.
+    - Only return PASS if the summaries convey the same key meaning or information.
+    - If the prediction misses major elements or includes hallucinated ones, return FAIL.
+    - You must return ONLY the word PASS or FAIL — nothing else.
 
-def compare_source_types(pred_types, true_types):
-    passed = llm_grade_with_zephyr(true_types, pred_types)
-    matched = set(pred_types).intersection(true_types)
-    score = 1.0 if passed else 0.0
-    return matched, score, passed
+    Ground truth summary: {true_summary}
+    Predicted summary: {pred_summary}
+
+    Result:
+    """
+    try:
+        response = llm.complete(prompt)
+        output = response.text.strip().upper()
+        return "PASS" in output
+    except Exception as e:
+        print("LLM summary evaluation failed.", e)
+        return False
 
 def main():
     if not os.path.exists(GROUND_TRUTH_FILE):
@@ -103,19 +88,22 @@ def main():
         pred_sources = pred.get("structured", {}).get("source_type", [])
         true_sources = truth["structured"]["source_type"]
 
-        matched, score, success = compare_source_types(pred_sources, true_sources)
-        sim = text_similarity(pred.get("summary", ""), truth.get("summary", ""))
+        pred_summary = pred.get("summary", "")
+        true_summary = truth["summary"]
+
+        source_type_pass = llm_grade_source_types(true_sources, pred_sources)
+        summary_pass = llm_grade_summary(true_summary, pred_summary)
 
         print(f"{fname}")
         print(f"  Source Types - expected: {true_sources}, predicted: {pred_sources}")
-        print(f"  Matched: {list(matched)}, Score: {score:.2f}")
-        print(f"  Summary Similarity: {sim:.2f}")
-        print(f"  {'PASS' if success else 'FAIL'}\n")
+        print(f"  Summary - expected: {true_summary}, predicted: {pred_summary}")
+        print(f"  Source Type Grade: {'PASS' if source_type_pass else 'FAIL'}")
+        print(f"  Summary Grade: {'PASS' if summary_pass else 'FAIL'}")
 
         total += 1
-        passed += int(success)
+        passed += int(source_type_pass and summary_pass)
 
-    print(f"Final Evaluation: {passed}/{total} correct source_type predictions")
+    print(f"Final Evaluation: {passed}/{total} files passed both source type and summary grading")
 
 if __name__ == "__main__":
     main()
