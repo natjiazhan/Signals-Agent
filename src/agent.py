@@ -14,6 +14,7 @@ from llama_index.core import PromptTemplate
 from rich.console import Console
 from rich.panel import Panel
 from format import format_fft_output_as_rich_table
+import glob
 
 
 # Passes all the API calls to the OpenTelemetry collector 
@@ -93,7 +94,7 @@ async def run_agent(query: str, console: Console = Console()):
         ))
 
     response = await handler
-    
+
 if __name__ == "__main__":
     query = """
     Instruction: At the end of your analysis, call the `save_agent_output` function with the following format:
@@ -101,16 +102,16 @@ if __name__ == "__main__":
     {
         "summary": "...",
         "structured": {
-            "source_type": ["human", "synthesized"]
+            "source_type": ["..."]
         }
     }
 
-    Use only these source_type categories: ["human", "synthesized", "machine", "nature", "video game"]. Do not invent your own.
+    Example Inputs and Outputs
 
-    Example Input:
+    Example 1 Input:
     This audio shows dominant low-frequency peaks near 392 Hz, with narrow tonal stability over time. It resembles synthetic tones found in video game environments.
 
-    Example Output:
+    Example 1 Output:
     {
         "summary": "This clip contains synthesized tones resembling video game sound effects. There are stable peaks near 392 Hz consistent with tonal, digital sources.",
         "structured": {
@@ -118,8 +119,195 @@ if __name__ == "__main__":
         }
     }
 
+    Example 2 Input:
+    The signal includes periodic broadband bursts around 30 Hz and layered noise throughout. The waveform resembles crowd cheering in a stadium.
 
-    Now analyze: ./data/audio4.mp3 using fft (20x20 bins) and Perplexity. Describe the spectral content and determine likely sources. End by calling `save_agent_output` with your result.
+    Example 2 Output:
+    {
+        "summary": "This clip features crowd noise and cheering, consistent with a stadium environment. Energy appears in low and mid-band bursts.",
+        "structured": {
+            "source_type": ["cheering", "crowd"]
+        }
+    }
+
+    Example 3 Input:
+    This recording contains irregular bursts between 250–500 Hz and long ambient tonal noise near 60 Hz. Matches urban street conditions.
+
+    Example 3 Output:
+    {
+        "summary": "This clip was recorded on a street with cars, honking, human voices, and mechanical beeps. Low-frequency ambient hum present.",
+        "structured": {
+            "source_type": ["street", "cars", "horns", "human", "beeping"]
+        }
+    }
+
+    Example 4 Input:
+    Sharp high-frequency tonal peaks repeating every second, plus short impulses typical of keystrokes. FFT stable at 2.5–3 kHz.
+
+    Example 4 Output:
+    {
+        "summary": "This audio is dominated by keyboard typing. Consistent short pulses suggest machine-generated input.",
+        "structured": {
+            "source_type": ["keyboard", "typing", "machine"]
+        }
+    }
+
+    Example 5 Input:
+    Broadband continuous signal with distinct chirps and frequency sweeps around 1–4 kHz, consistent with bird calls.
+
+    Example 5 Output:
+    {
+        "summary": "This clip contains nature sounds including bird songs and forest ambiance.",
+        "structured": {
+            "source_type": ["bird", "nature", "forest"]
+        }
+    }
+
+    Example 6 Input:
+    Repeating tonal bursts at 400–900 Hz, and background ambient tones with sudden transients typical of construction sites.
+
+    Example 6 Output:
+    {
+        "summary": "This clip was recorded near a construction site with heavy machinery and motor noise.",
+        "structured": {
+            "source_type": ["construction", "machine", "heavy machinery"]
+        }
+    }
+
+    Example 7 Input:
+    Strong periodic signals below 100 Hz, subtle mid-band beeps, and noisy artifacts. Possibly an elevator environment.
+
+    Example 7 Output:
+    {
+        "summary": "This clip was taken inside an elevator. It includes mechanical sounds and elevator beeping.",
+        "structured": {
+            "source_type": ["elevator", "machine", "motor", "beeping"]
+        }
+    }
+
+    Example 8 Input:
+    Tonal content includes piano harmonics and soft brass notes. Clear harmonic structure between 250–2,000 Hz.
+
+    Example 8 Output:
+    {
+        "summary": "This clip contains classical music with piano and brass instruments.",
+        "structured": {
+            "source_type": ["music", "classical", "piano", "brass"]
+        }
+    }
+
+    Example 9 Input:
+    Consistent wideband noise at 400–600 Hz. Speech modulations suggest multiple humans talking in overlapping intervals.
+
+    Example 9 Output:
+    {
+        "summary": "This clip was taken in a call center with overlapping human conversations.",
+        "structured": {
+            "source_type": ["human", "office"]
+        }
+    }
+
+    Example 10 Input:
+    High-energy bursts between 4–7 kHz and repetitive peaks. Matches fire crackling patterns.
+
+    Example 10 Output:
+    {
+        "summary": "This audio was recorded near a fireplace with crackling wood sounds.",
+        "structured": {
+            "source_type": ["fireplace", "crackling", "wood"]
+        }
+    }
+
+    Example 11 Input:
+    Layered low-frequency rumble and intermittent tonal peaks from motors and warning beeps.
+
+    Example 11 Output:
+    {
+        "summary": "Construction machinery and backup alarms dominate this audio.",
+        "structured": {
+            "source_type": ["machine", "construction", "beeping"]
+        }
+    }
+
+    Example 12 Input:
+    Intermittent tones from an elevator chime, mechanical vibration bursts, and echoey midtones.
+
+    Example 12 Output:
+    {
+        "summary": "Elevator sounds with motor hum and floor change tones are heard.",
+        "structured": {
+            "source_type": ["elevator", "machine", "motor"]
+        }
+    }
+
+    Example 13 Input:
+    Midband sine waves forming a melody, repeating in fixed intervals. Matches synthesized audio patterns.
+
+    Example 13 Output:
+    {
+        "summary": "Synthesized piano music with repeating tone structure and calm melody.",
+        "structured": {
+            "source_type": ["synthesized", "music"]
+        }
+    }
+
+    Example 14 Input:
+    Dense broadband bursts with regular gaps. Tonal content resembles energetic electronic music.
+
+    Example 14 Output:
+    {
+        "summary": "This clip contains upbeat electronic dance music with synthesized beats.",
+        "structured": {
+            "source_type": ["electronic", "dance", "music", "synthesized"]
+        }
+    }
+
+    Example 15 Input:
+    Continuous low-frequency hum, broadband tonal fluctuations, overlapping speech patterns, and clicking.
+
+    Example 15 Output:
+    {
+        "summary": "Recorded in a call center environment with phones ringing and people talking.",
+        "structured": {
+            "source_type": ["human", "office", "phone", "ringing"]
+        }
+    }
+
+    Example 16 Input:
+    High frequency chirps between 2–5 kHz and wave-like broad energy bands. Matches ocean wave and seagull profiles.
+
+    Example 16 Output:
+    {
+        "summary": "Beach environment with seagulls squawking and waves crashing on shore.",
+        "structured": {
+            "source_type": ["beach", "waves", "seagulls"]
+        }
+    }
+
+    Example 17 Input:
+    Wideband audio with rumbling, frequent pops, and rising tonal ramps. Consistent with thunderstorm activity.
+
+    Example 17 Output:
+    {
+        "summary": "This clip contains thunder rumbling, rainfall, and distant lightning strikes.",
+        "structured": {
+            "source_type": ["thunderstorm", "rain", "thunder", "lightning"]
+        }
+    }
+
+    Example 18 Input:
+    Vocal-like tone contours repeating in two turns, consistent harmonic spacing.
+
+    Example 18 Output:
+    {
+        "summary": "This clip contains two artificial voices talking to each other.",
+        "structured": {
+            "source_type": ["synthesized", "artificial", "voices", "conversation"]
+        }
+    }
+
+    Now analyze: ./data/audio2.mp3 using fft (20x20 bins) and Perplexity. Describe the spectral content and determine likely sources. End by calling `save_agent_output` with your result.
     """
+
 
     asyncio.run(run_agent(query))

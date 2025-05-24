@@ -1,9 +1,10 @@
 {
-  "summary": "This audio clip exhibits dominant low-frequency energy concentrated primarily between 50 and 100 Hz, with a stable spectral envelope over time. The spectral profile is consistent with an electronically synthesized drone, typical in digital sound designs and video game environments.",
+  "summary": "This audio clip is dominated by a continuous low-frequency hum in the 55-110 Hz range that is characteristic of machine or electrical sources, such as HVAC or motor noise. Intermittent tonal bursts in the 1102-2205 Hz range suggest periodic electronic or device-related sounds, possibly from alarms or notifications in an indoor environment.",
   "structured": {
     "source_type": [
-      "synthesized",
-      "video game"
+      "machine",
+      "electronic",
+      "ambient"
     ]
   }
 }

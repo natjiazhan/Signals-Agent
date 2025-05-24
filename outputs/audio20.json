@@ -1,0 +1,8 @@
+{
+  "summary": "The FFT analysis reveals a persistent, narrow spectral peak between 2000 and 3000 Hz throughout the audio clip. This frequency signature is characteristic of digitally synthesized tones produced by electronic devices such as alarms, test tones, or calibration signals, strongly suggesting a man-made source.",
+  "structured": {
+    "source_type": [
+      "synthesized"
+    ]
+  }
+}

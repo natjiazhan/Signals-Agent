@@ -1,8 +1,10 @@
 {
-  "summary": "This audio clip exhibits persistent, dominant low-frequency energy across its duration, with a consistent peak in the 75\u2013100 Hz range. The narrow and stable spectral profile strongly indicates that the sound is synthesized rather than produced by natural or human sources.",
+  "summary": "The audio exhibits a steady, low-frequency hum dominated by energy in the 0\u2013100 Hz range, which gradually decreases up to 2000 Hz. This spectral pattern is characteristic of man-made sources such as electrical transformers, motors, or HVAC systems, rather than transient natural phenomena.",
   "structured": {
     "source_type": [
-      "synthesized"
+      "electrical",
+      "machinery",
+      "ambient"
     ]
   }
 }

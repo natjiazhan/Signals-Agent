@@ -1,0 +1,8 @@
+{
+  "summary": "This audio clip has a dominant and nearly constant low-frequency background (0\u20132000 Hz), which is typical of a synthesized or machine-generated signal. Additionally, there are intermittent, narrowband high-frequency spikes around 8900\u20139000 Hz between 255 and 285 seconds, indicative of synthesized test tones or calibration beeps, rather than natural or human sources.",
+  "structured": {
+    "source_type": [
+      "synthesized"
+    ]
+  }
+}

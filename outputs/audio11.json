@@ -1,0 +1,9 @@
+{
+  "summary": "The audio file is dominated by stable, low-frequency energy exclusively in the 0-2000 Hz range throughout its duration. The consistent, steady spectral profile\u2014with over 90% energy in that range and minimal variability\u2014suggests an artificially synthesized tone, characteristic of digital sound design typically found in video game environments.",
+  "structured": {
+    "source_type": [
+      "synthesized",
+      "video game"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "summary": "The spectral analysis reveals a consistently dominant low-frequency component (0\u20131102 Hz) with minimal energy above that, consistent with a steady, electronically generated drone. This profile is more aligned with synthesized and machine-generated sounds rather than natural, human, or animal sound sources.",
+  "structured": {
+    "source_type": [
+      "synthesized",
+      "machine"
+    ]
+  }
+}

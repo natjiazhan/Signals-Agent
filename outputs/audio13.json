@@ -1,0 +1,8 @@
+{
+  "summary": "The analysis indicates a persistent, narrow spectral peak in the 800-900 Hz range throughout the clip. This stable and isolated mid-frequency energy is characteristic of a synthesized tone, such as those used in test or calibration signals.",
+  "structured": {
+    "source_type": [
+      "synthesized"
+    ]
+  }
+}

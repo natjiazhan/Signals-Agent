@@ -1,0 +1,8 @@
+{
+  "summary": "This audio clip is characterized by a dominant, stable low-frequency signal (0\u20132000 Hz) displaying minimal variability over time. A minor transient boost in the 4000\u20136000 Hz range was observed, but the overall spectral content suggests a synthesized tone likely generated electronically rather than through natural or human sources.",
+  "structured": {
+    "source_type": [
+      "synthesized"
+    ]
+  }
+}

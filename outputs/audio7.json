@@ -1,0 +1,9 @@
+{
+  "summary": "The audio clip contains stable low-frequency energy dominated by a prominent, sustained peak in the 300\u2013400 Hz range. The presence of consistent tonal content with little variation outside this band suggests that the audio is likely synthesized or machine-generated.",
+  "structured": {
+    "source_type": [
+      "synthesized",
+      "machine"
+    ]
+  }
+}

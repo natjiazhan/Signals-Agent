@@ -1,0 +1,9 @@
+{
+  "summary": "This clip features a persistent low-frequency component typical of human vocal fundamentals or ambient background hum, with a transient mid-frequency burst (2000\u20134000 Hz) likely corresponding to clear consonant articulation or synthesized enhancements. The spectral profile strongly suggests that the primary source is human, with occasional synthesized elements.",
+  "structured": {
+    "source_type": [
+      "human",
+      "synthesized"
+    ]
+  }
+}
