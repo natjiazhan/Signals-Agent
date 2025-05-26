@@ -1,11 +1,11 @@
 {
-  "summary": "This clip predominantly features urban ambient noise with strong, continuous low-frequency energy, consistent with distant traffic or engine hum along Hamilton Avenue. In the final couple of seconds, the reduced low-frequency background and the emergence of transient mid-frequency components indicate a discrete urban sound event, such as a passing vehicle.",
+  "summary": "The audio clip, recorded in an event space, primarily shows low-frequency energy (0\u20132000 Hz) consistent with human conversations. A noticeable energy increase in the 2000\u20134000 Hz band around 35.55\u201337.42 seconds points to construction or mechanical noise. This analysis reveals a blending of background chatter with intermittent mechanical activity, typical in busy event environments.",
   "structured": {
     "source_type": [
-      "urban",
-      "traffic",
-      "ambient",
-      "transient"
+      "human",
+      "conversation",
+      "construction",
+      "event_space"
     ]
   }
 }
