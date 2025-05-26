@@ -1,8 +1,11 @@
 {
-  "summary": "The analysis indicates a persistent, narrow spectral peak in the 800-900 Hz range throughout the clip. This stable and isolated mid-frequency energy is characteristic of a synthesized tone, such as those used in test or calibration signals.",
+  "summary": "This clip features the natural sounds of a beach environment, marked by the continuous hum of ocean waves and wind, along with intermittent high-frequency bursts typical of seagull calls or splashing waves.",
   "structured": {
     "source_type": [
-      "synthesized"
+      "beach",
+      "ocean",
+      "seagulls",
+      "natural"
     ]
   }
 }

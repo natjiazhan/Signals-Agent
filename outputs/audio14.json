@@ -1,9 +1,10 @@
 {
-  "summary": "This clip features a persistent low-frequency component typical of human vocal fundamentals or ambient background hum, with a transient mid-frequency burst (2000\u20134000 Hz) likely corresponding to clear consonant articulation or synthesized enhancements. The spectral profile strongly suggests that the primary source is human, with occasional synthesized elements.",
+  "summary": "This audio clip displays spectral features characteristic of classical music. It shows dominant low-frequency energy\u2014with peaks in the bass frequencies likely arising from string instruments such as cellos and double bass\u2014complemented by mid-frequency components corresponding to violins, woodwinds, and pianos. The dynamic distribution over time supports a rich orchestral performance.",
   "structured": {
     "source_type": [
-      "human",
-      "synthesized"
+      "music",
+      "classical",
+      "orchestral"
     ]
   }
 }

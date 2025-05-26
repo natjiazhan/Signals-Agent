@@ -1,8 +1,10 @@
 {
-  "summary": "This audio clip is characterized by a dominant, stable low-frequency signal (0\u20132000 Hz) displaying minimal variability over time. A minor transient boost in the 4000\u20136000 Hz range was observed, but the overall spectral content suggests a synthesized tone likely generated electronically rather than through natural or human sources.",
+  "summary": "This audio clip was recorded in a call center office. The spectral analysis shows stable broadband energy in the low to mid frequency ranges, with a prominent peak in the 400\u2013666 Hz range and consistent energy in the 2000\u20134000 Hz band. These features are consistent with overlapping human speech and typical office background sounds like ambient hum from equipment.",
   "structured": {
     "source_type": [
-      "synthesized"
+      "human",
+      "office",
+      "call center"
     ]
   }
 }

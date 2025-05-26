@@ -1,9 +1,10 @@
 {
-  "summary": "This audio clip shows dominant low-frequency energy, particularly around 60\u201375 Hz, overlaid with intermittent higher frequency tones. These spectral characteristics are typical of a synthesized soundscape, reminiscent of digital, video game-style sound effects.",
+  "summary": "This audio was recorded in a forest and captures a natural soundscape. The spectral analysis shows ambient low-frequency background noise with clear, repetitive peaks in the mid to high-frequency bands (approximately 2000\u20136000 Hz) which are characteristic of bird calls.",
   "structured": {
     "source_type": [
-      "synthesized",
-      "video game"
+      "bird",
+      "forest",
+      "nature"
     ]
   }
 }

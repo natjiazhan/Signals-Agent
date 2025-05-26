@@ -1,8 +1,10 @@
 {
-  "summary": "This audio clip shows a dominant low-frequency energy primarily between 0\u20131102 Hz with a noticeable secondary band between 1102\u20132205 Hz. The spectral content is stable and narrow over time, which is typical of synthesized tones rather than natural environmental sounds.",
+  "summary": "The analysis shows a dominant low-frequency hum (especially below 133 Hz) that is consistent with an elevator motor's operation, along with secondary mechanical sounds suggestive of structural resonances. The overall spectral profile is typical for an elevator environment with minimal high-frequency content.",
   "structured": {
     "source_type": [
-      "synthesized"
+      "elevator",
+      "mechanical",
+      "motor"
     ]
   }
 }

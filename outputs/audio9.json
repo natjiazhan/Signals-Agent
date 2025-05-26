@@ -1,9 +1,10 @@
 {
-  "summary": "This audio clip shows a narrow and stable tonal peak at around 1000 Hz, with its energy primarily confined between 900 Hz and 1125 Hz. The concentrated spectral component strongly suggests that the sound is electronically synthesized, resembling calibration tones or digital sound effects commonly associated with video game audio.",
+  "summary": "This audio clip contains the spectral signature of a baby crying. The analysis reveals dominant tonal energy around 900\u20131100 Hz, accompanied by lower-frequency components, which is characteristic of an infant's cry.",
   "structured": {
     "source_type": [
-      "synthesized",
-      "video game"
+      "baby",
+      "crying",
+      "human"
     ]
   }
 }

@@ -1,9 +1,12 @@
 {
-  "summary": "The audio file is dominated by stable, low-frequency energy exclusively in the 0-2000 Hz range throughout its duration. The consistent, steady spectral profile\u2014with over 90% energy in that range and minimal variability\u2014suggests an artificially synthesized tone, characteristic of digital sound design typically found in video game environments.",
+  "summary": "This audio was recorded at a beach and features dominant low-frequency energy, consistent with the sound of crashing ocean waves and wind over the shoreline. There is also moderate mid-frequency energy that likely corresponds to seagull calls and other ambient beach bird sounds.",
   "structured": {
     "source_type": [
-      "synthesized",
-      "video game"
+      "ocean",
+      "waves",
+      "wind",
+      "seagull",
+      "beach"
     ]
   }
 }

@@ -1,8 +1,10 @@
 {
-  "summary": "The analysis shows that the clip\u2019s spectral energy is almost entirely confined below 2000 Hz, with a pronounced and stable peak in the 300\u2013400 Hz band. This focused tonal profile is more indicative of a synthesized sound than a natural human or environmental source.",
+  "summary": "This clip contains two AI voices engaging in conversation with clear synthetic speech characteristics. The spectral analysis reveals dominant energy in the mid-frequency range, especially around 266\u2013400 Hz, with additional harmonics up to 2000 Hz. The stable tonal patterns and temporal modulation between peaks align with voices generated via synthesized text-to-speech, creating alternating voice profiles.",
   "structured": {
     "source_type": [
-      "synthesized"
+      "synthesized",
+      "AI voices",
+      "conversation"
     ]
   }
 }

@@ -1,10 +1,11 @@
 {
-  "summary": "The audio exhibits a steady, low-frequency hum dominated by energy in the 0\u2013100 Hz range, which gradually decreases up to 2000 Hz. This spectral pattern is characteristic of man-made sources such as electrical transformers, motors, or HVAC systems, rather than transient natural phenomena.",
+  "summary": "This clip was recorded in a forest where a flowing creek dominates the soundscape. The FFT analysis reveals that most of the energy is concentrated in the lower frequencies (0-1102 Hz), typical of natural water flow, with a consistent, stable amplitude over time. Minor energy in higher bands may indicate ambient rustling leaves or distant wildlife, but the primary source is clearly the creek and environmental forest sounds.",
   "structured": {
     "source_type": [
-      "electrical",
-      "machinery",
-      "ambient"
+      "forest",
+      "water",
+      "creek",
+      "natural"
     ]
   }
 }

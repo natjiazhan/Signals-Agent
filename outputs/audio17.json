@@ -1,8 +1,11 @@
 {
-  "summary": "This audio is characterized by a stable, dominant low-frequency hum concentrated mainly in the 0\u2013200 Hz range, particularly below 100 Hz. This continuous and consistent frequency pattern strongly indicates that the sound originates from mechanical or industrial machinery, such as ventilation systems or engines, rather than from natural phenomena or synthesized effects.",
+  "summary": "The spectral analysis reveals dominant low-frequency rumbling characteristic of thunder, with additional mid-frequency bursts likely caused by thunderclaps and the ambient sound of rainfall. This pattern is consistent with a thunderstorm environment, where deep thunder rumbles combine with sharper, transient impacts from rain and lightning-related effects.",
   "structured": {
     "source_type": [
-      "machine"
+      "thunderstorm",
+      "thunder",
+      "rain",
+      "ambient"
     ]
   }
 }

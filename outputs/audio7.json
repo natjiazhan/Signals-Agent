@@ -1,9 +1,12 @@
 {
-  "summary": "The audio clip contains stable low-frequency energy dominated by a prominent, sustained peak in the 300\u2013400 Hz range. The presence of consistent tonal content with little variation outside this band suggests that the audio is likely synthesized or machine-generated.",
+  "summary": "This audio was recorded at a busy cafe. The spectral content shows layered sounds with a continuous low-frequency hum, prominent mid-frequency energy consistent with human conversation, and sporadic high-frequency bursts typical of dish clattering and ambient music. These characteristics point to a lively cafe environment with overlapping human interaction and common cafe sounds.",
   "structured": {
     "source_type": [
-      "synthesized",
-      "machine"
+      "human",
+      "cafe",
+      "conversation",
+      "clatter",
+      "ambience"
     ]
   }
 }

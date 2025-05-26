@@ -1,9 +1,11 @@
 {
-  "summary": "The spectral analysis reveals a consistently dominant low-frequency component (0\u20131102 Hz) with minimal energy above that, consistent with a steady, electronically generated drone. This profile is more aligned with synthesized and machine-generated sounds rather than natural, human, or animal sound sources.",
+  "summary": "This clip was recorded at a construction site. The spectral profile is dominated by low-frequency energy\u2014particularly in the 66\u2013133 Hz range\u2014consistent with heavy machinery and engine hum. Additional peaks in the 200\u2013266 Hz and around 333\u2013400 Hz bands suggest mechanical operations and intermittent signals typical of a construction environment.",
   "structured": {
     "source_type": [
-      "synthesized",
-      "machine"
+      "construction",
+      "machine",
+      "heavy machinery",
+      "engine hum"
     ]
   }
 }

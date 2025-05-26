@@ -1,8 +1,11 @@
 {
-  "summary": "This audio clip has a dominant and nearly constant low-frequency background (0\u20132000 Hz), which is typical of a synthesized or machine-generated signal. Additionally, there are intermittent, narrowband high-frequency spikes around 8900\u20139000 Hz between 255 and 285 seconds, indicative of synthesized test tones or calibration beeps, rather than natural or human sources.",
+  "summary": "The spectral analysis of the audio from a busy street shows dominant low-frequency energy, especially in the 0\u2013100 Hz region, typical of engine rumble and road vibrations from passing vehicles. Occasional mid-frequency bursts suggest additional traffic elements such as horns or even human voices. Overall, the spectral content is consistent with an urban street environment with heavy traffic and diverse sound sources.",
   "structured": {
     "source_type": [
-      "synthesized"
+      "street",
+      "traffic",
+      "vehicle",
+      "urban"
     ]
   }
 }

@@ -1,8 +1,12 @@
 {
-  "summary": "The clip shows a dominant, stable low-frequency energy band (0\u20131000 Hz) that is highly consistent with a synthesized low-frequency drone rather than natural or human-produced sounds.",
+  "summary": "This recording is an EDM track characterized by strong low-frequency pulses from kick drums and bass, accompanied by synthesized melodic and percussive elements in the mid to high frequency range. The dynamic spectral changes affirm a typical structure of electronic dance music with engineered beats and layered synthesizer tones.",
   "structured": {
     "source_type": [
-      "synthesized"
+      "EDM",
+      "electronic",
+      "synthesized",
+      "bass",
+      "beat"
     ]
   }
 }

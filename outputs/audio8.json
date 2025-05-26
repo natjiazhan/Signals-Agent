@@ -1,0 +1,11 @@
+{
+  "summary": "This audio was recorded in a large stadium. It exhibits a dominant energy band around 700\u2013900 Hz, likely due to the ambient murmur of a crowd, complemented by mid-frequency content from public address announcements and the reflective acoustics of the venue. The higher frequency details further indicate the presence of sophisticated audio systems within the stadium.",
+  "structured": {
+    "source_type": [
+      "stadium",
+      "crowd",
+      "PA system",
+      "acoustics"
+    ]
+  }
+}
