@@ -97,14 +97,7 @@ async def run_agent(query: str, console: Console = Console()):
 
 if __name__ == "__main__":
     query = """
-    Instruction: At the end of your analysis, call the `save_agent_output` function with the following format:
-
-    {
-        "summary": "...",
-        "structured": {
-            "source_type": ["..."]
-        }
-    }
+    I want you to analyze an audio file and describe its spectral content. I want you to determine the likely sources of the audio based on its frequency characteristics and the context of the examples provided. I will walk you through some reasoning to help you do so. There are also tools at your disposal.
 
     Example Inputs and Outputs
 
@@ -305,7 +298,16 @@ if __name__ == "__main__":
             "source_type": ["synthesized", "artificial", "voices", "conversation"]
         }
     }
+    Reasoning: I have been given an audio file to analyze. I will use the file_meta_data tool to extract relevant characteristics of the audio file. It seems that this audio file is 5 minutes in duration. I will now use the fft tool to do spectral analysis. Since the duration of this audio file is 5 minutes I should start with a broad analysis first. To go deeper, I’ll perform multiple FFTs at different resolutions. I'll vary the time and frequency bin sizes to capture both short, transient events and longer, sustained trends. I'll do shorter time windows that will help me catch brief, sharp peaks like clicks or speech fragments. I'll use longer windows to reveal slower or more continuous signals like machinery hums or background noise. I’ll pay close attention to how peaks and energy distributions change over time, which can tell me whether the source is static or dynamic. I will use as many combinations of these FFTs as I need to fully understand the audio file. By layering insights from metadata, multiscale FFTs, and time-frequency patterns, I can build a clear understanding of what’s happening in the audio and where each signal component might be coming from.
 
+    Produce an output in the following format:
+    {
+        "summary": "...",
+        "structured": {
+            "source_type": ["..."]
+        }
+    }
+    
     Now analyze: ./data/audio20.mp3. This audio file contains a keyboard typing. Describe the spectral content and determine likely sources. End by calling `save_agent_output` with your result.
     """
 
