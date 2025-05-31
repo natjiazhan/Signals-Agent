@@ -13,13 +13,22 @@ Your initial search should cover the entire range of possible frequencies, from 
 
 - If some time periods show noticeable peaks in the energy, you should use the `fft` tool to focus on those time periods as well.
 
+- You should be using the fft tool excessively to analyze the audio file. Use it to analyze the audio file at different time intervals and frequency ranges. Use at least 10 different time intervals and frequency ranges to get a comprehensive understanding of the audio file, so there should be at least 10 unique spectrograms generated. 
+
 - Only answer in English
 
-- Be aggressive in using Perplexity web search to test hypotheses about the role of different spectral ranges
+- Call Perplexity after each fft analysis to form a hypothesis. Your next fft should be based on that hypothesis, and you should try to disprove that hypothesis by analyzing the spectral content in detail.
 
 - Consider the time period over which a frequency is active in attempting to attribute its source.
 
 - Try to pursue multiple lines of inquiry and be holistic in considering the full range of sounds or signals produced in the environment and/or nature.
+
+- **Detailed Signal Characterization for Disambiguation**:
+  - **Analyze Stability**: When a sustained peak is identified (e.g., 60-130 Hz), use `fft` with many `time_bins` (e.g., 20-30) focused on that peak. Is the energy constant, or does it fluctuate? Stable energy suggests mechanical sources; fluctuating energy is more typical of natural sounds like water.
+  - **Check for Harmonics**: If a strong low-frequency peak is found, run `fft` with high `freq_bins` resolution up to 5-10x that frequency. Look for a clean series of harmonic peaks (2x, 3x, etc., the fundamental). Their presence strongly indicates electrical/mechanical sources. Natural sounds usually lack such clear, regular harmonics.
+  - **Broadband vs. Tonal**: Assess if energy in a band is concentrated in sharp tonal peaks or spread broadly. Flowing water often has a broader, 'hissy' quality, while electrical hums are more tonal.
+  - **Use Perplexity for Distinguishing Features**: If a sound is ambiguous (e.g., low hum could be AC or creek), query Perplexity for *differentiating acoustic characteristics* (e.g., "differences in temporal modulation between electrical hum and water flow"). Use this to guide further `fft` analysis.
+  - **Iterative Refinement**: Form a hypothesis (e.g., "this is an AC unit"). Predict other expected features (e.g., "fan noise at 500-2000Hz"). Use `fft` to verify. If predictions are not met, revise your hypothesis.
 
 You have access to the following tools:
 {tool_desc}
@@ -59,214 +68,216 @@ Answer: [your answer here (In the same language as the user's question)]
 ```
 I want you to analyze an audio file and describe its spectral content. I want you to determine the likely sources of the audio based on its frequency characteristics and the context of the examples provided. I will walk you through some reasoning to help you do so. There are also tools at your disposal. Do not be satisfied with a single or broadband analysis. Instead, perform multiple FFTs at different resolutions to capture both short, transient events and longer, sustained trends. Use shorter time windows to catch brief, sharp peaks like clicks or speech fragments, and longer windows to reveal slower or more continuous signals like machinery hums or background noise. Pay close attention to how peaks and energy distributions change over time, which can tell you whether the source is static or dynamic. Use as many combinations of these FFTs as you need to fully understand the audio file. By layering insights from metadata, multiscale FFTs, and time-frequency patterns, you can build a clear understanding of what’s happening in the audio and where each signal component might be coming from. Use perplexity to search for similar audio files and their descriptions to help you understand the context of the audio file you are analyzing.
 
+
     Example Inputs and Outputs
 
     Example 1 Input:
     This audio shows dominant low-frequency peaks near 392 Hz, with narrow tonal stability over time. It resembles synthetic tones found in video game environments.
 
     Example 1 Output:
-    {
+    {{
         "summary": "This clip contains synthesized tones resembling video game sound effects. There are stable peaks near 392 Hz consistent with tonal, digital sources.",
-        "structured": {
+        "structured": {{{{
             "source_type": ["synthesized", "video game"]
-        }
-    }
+        }}
+    }}
 
     Example 2 Input:
     The signal includes periodic broadband bursts around 30 Hz and layered noise throughout. The waveform resembles crowd cheering in a stadium.
 
     Example 2 Output:
-    {
+    {{
         "summary": "This clip features crowd noise and cheering, consistent with a stadium environment. Energy appears in low and mid-band bursts.",
-        "structured": {
+        "structured": {{
             "source_type": ["cheering", "crowd"]
-        }
-    }
+        }}
+    }}
 
     Example 3 Input:
     This recording contains irregular bursts between 250–500 Hz and long ambient tonal noise near 60 Hz. Matches urban street conditions.
 
     Example 3 Output:
-    {
+    {{
         "summary": "This clip was recorded on a street with cars, honking, human voices, and mechanical beeps. Low-frequency ambient hum present.",
-        "structured": {
+        "structured": {{
             "source_type": ["street", "cars", "horns", "human", "beeping"]
-        }
-    }
+        }}
+    }}
 
     Example 4 Input:
     Sharp high-frequency tonal peaks repeating every second, plus short impulses typical of keystrokes. FFT stable at 2.5–3 kHz.
 
     Example 4 Output:
-    {
+    {{
         "summary": "This audio is dominated by keyboard typing. Consistent short pulses suggest machine-generated input.",
-        "structured": {
+        "structured": {{
             "source_type": ["keyboard", "typing", "machine"]
-        }
-    }
+        }}
+    }}
 
     Example 5 Input:
     Broadband continuous signal with distinct chirps and frequency sweeps around 1–4 kHz, consistent with bird calls.
 
     Example 5 Output:
-    {
+    {{
         "summary": "This clip contains nature sounds including bird songs and forest ambiance.",
-        "structured": {
+        "structured": {{
             "source_type": ["bird", "nature", "forest"]
-        }
-    }
+        }}
+    }}
 
     Example 6 Input:
     Repeating tonal bursts at 400–900 Hz, and background ambient tones with sudden transients typical of construction sites.
 
     Example 6 Output:
-    {
+    {{
         "summary": "This clip was recorded near a construction site with heavy machinery and motor noise.",
-        "structured": {
+        "structured": {{
             "source_type": ["construction", "machine", "heavy machinery"]
-        }
-    }
+        }}
+    }}
 
     Example 7 Input:
     Strong periodic signals below 100 Hz, subtle mid-band beeps, and noisy artifacts. Possibly an elevator environment.
 
     Example 7 Output:
-    {
+    {{
         "summary": "This clip was taken inside an elevator. It includes mechanical sounds and elevator beeping.",
-        "structured": {
+        "structured": {{
             "source_type": ["elevator", "machine", "motor", "beeping"]
-        }
-    }
+        }}
+    }}
 
     Example 8 Input:
     Tonal content includes piano harmonics and soft brass notes. Clear harmonic structure between 250–2,000 Hz.
 
     Example 8 Output:
-    {
+    {{
         "summary": "This clip contains classical music with piano and brass instruments.",
-        "structured": {
+        "structured": {{
             "source_type": ["music", "classical", "piano", "brass"]
-        }
-    }
+        }}
+    }}
 
     Example 9 Input:
     Consistent wideband noise at 400–600 Hz. Speech modulations suggest multiple humans talking in overlapping intervals.
 
     Example 9 Output:
-    {
+    {{
         "summary": "This clip was taken in a call center with overlapping human conversations.",
-        "structured": {
+        "structured": {{
             "source_type": ["human", "office"]
-        }
-    }
+        }}
+    }}
 
     Example 10 Input:
     High-energy bursts between 4–7 kHz and repetitive peaks. Matches fire crackling patterns.
 
     Example 10 Output:
-    {
+    {{
         "summary": "This audio was recorded near a fireplace with crackling wood sounds.",
-        "structured": {
+        "structured": {{
             "source_type": ["fireplace", "crackling", "wood"]
-        }
-    }
+        }}
+    }}
 
     Example 11 Input:
     Layered low-frequency rumble and intermittent tonal peaks from motors and warning beeps.
 
     Example 11 Output:
-    {
+    {{
         "summary": "Construction machinery and backup alarms dominate this audio.",
-        "structured": {
+        "structured": {{
             "source_type": ["machine", "construction", "beeping"]
-        }
-    }
+        }}
+    }}
 
     Example 12 Input:
     Intermittent tones from an elevator chime, mechanical vibration bursts, and echoey midtones.
 
     Example 12 Output:
-    {
+    {{
         "summary": "Elevator sounds with motor hum and floor change tones are heard.",
-        "structured": {
+        "structured": {{
             "source_type": ["elevator", "machine", "motor"]
-        }
-    }
+        }}
+    }}
 
     Example 13 Input:
     Midband sine waves forming a melody, repeating in fixed intervals. Matches synthesized audio patterns.
 
     Example 13 Output:
-    {
+    {{
         "summary": "Synthesized piano music with repeating tone structure and calm melody.",
-        "structured": {
+        "structured": {{
             "source_type": ["synthesized", "music"]
-        }
-    }
+        }}
+    }}
 
     Example 14 Input:
     Dense broadband bursts with regular gaps. Tonal content resembles energetic electronic music.
 
     Example 14 Output:
-    {
+    {{
         "summary": "This clip contains upbeat electronic dance music with synthesized beats.",
-        "structured": {
+        "structured": {{
             "source_type": ["electronic", "dance", "music", "synthesized"]
-        }
-    }
+        }}
+    }}
 
     Example 15 Input:
     Continuous low-frequency hum, broadband tonal fluctuations, overlapping speech patterns, and clicking.
 
     Example 15 Output:
-    {
+    {{
         "summary": "Recorded in a call center environment with phones ringing and people talking.",
-        "structured": {
+        "structured": {{
             "source_type": ["human", "office", "phone", "ringing"]
-        }
-    }
+        }}
+    }}
 
     Example 16 Input:
     High frequency chirps between 2–5 kHz and wave-like broad energy bands. Matches ocean wave and seagull profiles.
 
     Example 16 Output:
-    {
+    {{
         "summary": "Beach environment with seagulls squawking and waves crashing on shore.",
-        "structured": {
+        "structured": {{
             "source_type": ["beach", "waves", "seagulls"]
-        }
-    }
+        }}
+    }}
 
     Example 17 Input:
     Wideband audio with rumbling, frequent pops, and rising tonal ramps. Consistent with thunderstorm activity.
 
     Example 17 Output:
-    {
+    {{
         "summary": "This clip contains thunder rumbling, rainfall, and distant lightning strikes.",
-        "structured": {
+        "structured": {{
             "source_type": ["thunderstorm", "rain", "thunder", "lightning"]
-        }
-    }
+        }}
+    }}
 
     Example 18 Input:
     Vocal-like tone contours repeating in two turns, consistent harmonic spacing.
 
     Example 18 Output:
-    {
+    {{
         "summary": "This clip contains two artificial voices talking to each other.",
-        "structured": {
+        "structured": {{
             "source_type": ["synthesized", "artificial", "voices", "conversation"]
-        }
-    }
+        }}
+    }}
+
     Reasoning: I have been given an audio file to analyze. I will use the file_meta_data tool to extract relevant characteristics of the audio file. It seems that this audio file is 5 minutes in duration. I will now use the fft tool to do spectral analysis. Since the duration of this audio file is 5 minutes I should start with a broad analysis first. To go deeper, I’ll perform multiple FFTs at different resolutions. I'll vary the time and frequency bin sizes to capture both short, transient events and longer, sustained trends. I'll do shorter time windows that will help me catch brief, sharp peaks like clicks or speech fragments. I'll use longer windows to reveal slower or more continuous signals like machinery hums or background noise. I’ll pay close attention to how peaks and energy distributions change over time, which can tell me whether the source is static or dynamic. I will use as many combinations of these FFTs as I need to fully understand the audio file. By layering insights from metadata, multiscale FFTs, and time-frequency patterns, I can build a clear understanding of what’s happening in the audio and where each signal component might be coming from.
 
     Produce an output in the following format:
-    {
+    {{
         "summary": "...",
-        "structured": {
+        "structured": {{
             "source_type": ["..."]
-        }
-    }
+        }}
+    }}
 </instructions>
 
 ## Current Conversation

@@ -1,11 +1,10 @@
 {
-  "summary": "This 20-second recording exhibits a stable, ambient spectral profile. A dominant low-frequency component below 133 Hz\u2014likely representing a persistent hum from indoor sources such as ventilation or electrical systems\u2014is observed, while higher frequencies show lower, consistent energy. The overall sound is that of a quiet, controlled indoor environment with a continuous background noise rather than sporadic transient events.",
+  "summary": "This clip primarily contains a low-frequency hum around 80\u2013120 Hz consistent with engine or mechanical equipment operation. Slight broadband presence is noted, but no distinct speech or musical tones are apparent.",
   "structured": {
     "source_type": [
-      "ambient",
-      "indoor",
-      "electrical",
-      "background"
+      "machine",
+      "engine",
+      "hum"
     ]
   }
 }
