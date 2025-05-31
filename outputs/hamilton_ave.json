@@ -1,11 +1,12 @@
 {
-  "summary": "The audio clip, recorded in an event space, primarily shows low-frequency energy (0\u20132000 Hz) consistent with human conversations. A noticeable energy increase in the 2000\u20134000 Hz band around 35.55\u201337.42 seconds points to construction or mechanical noise. This analysis reveals a blending of background chatter with intermittent mechanical activity, typical in busy event environments.",
+  "summary": "This clip features an urban street environment captured along Hamilton Avenue. The spectral content is dominated by steady low-frequency hum (0\u2013533 Hz) likely from vehicular engines and ambient urban noise. There are also transient peaks in the mid (2000\u20134000 Hz) and high (4000\u20138000 Hz) frequency ranges, suggesting the presence of passing vehicles, occasional sirens, and other street sounds such as potential human activities or mechanical events.",
   "structured": {
     "source_type": [
+      "urban",
+      "street",
+      "cars",
       "human",
-      "conversation",
-      "construction",
-      "event_space"
+      "machine"
     ]
   }
 }

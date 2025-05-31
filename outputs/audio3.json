@@ -1,10 +1,9 @@
 {
-  "summary": "This clip contains piano music. The spectrogram shows pronounced energy between 200-400 Hz, which is typical for the fundamentals of piano notes, along with secondary harmonics in the 400-600 Hz range that represent overtones. The temporal dynamics highlight the natural articulation and decay of piano notes, confirming an acoustic piano recording.",
+  "summary": "This clip exhibits a narrow tonal profile concentrated in the 250\u2013500 Hz range, with distinct and repeated peaks near 392 Hz. The consistent tonal stability over time suggests a synthesized signal, similar to digital tones found in video game environments.",
   "structured": {
     "source_type": [
-      "piano",
-      "music",
-      "instrument"
+      "synthesized",
+      "video game"
     ]
   }
 }

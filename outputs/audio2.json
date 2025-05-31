@@ -1,12 +1,10 @@
 {
-  "summary": "This audio recording from a first person shooter game features a dominant low-frequency ambient rumble that sets an intense background, punctuated by intermittent mid-frequency bursts likely representing dynamic game actions like gunfire, explosions, or footsteps. Such a spectral profile is typical of digitally synthesized soundscapes in modern video games.",
+  "summary": "The audio is dominated by a continuous low-frequency ambient hum below 200 Hz, possibly from building machinery or HVAC. An intermittent event between 46.55 and 52.37 seconds introduces midrange tonal peaks around 960\u2013986 Hz and 1466\u20131493 Hz, which are characteristic of digital or electronic alert tones.",
   "structured": {
     "source_type": [
-      "video game",
-      "synthesized",
-      "gunfire",
-      "explosions",
-      "ambient"
+      "ambient",
+      "mechanical",
+      "electronic"
     ]
   }
 }

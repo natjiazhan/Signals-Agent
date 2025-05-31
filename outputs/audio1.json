@@ -1,11 +1,11 @@
 {
-  "summary": "This clip was recorded in a forest where a flowing creek dominates the soundscape. The FFT analysis reveals that most of the energy is concentrated in the lower frequencies (0-1102 Hz), typical of natural water flow, with a consistent, stable amplitude over time. Minor energy in higher bands may indicate ambient rustling leaves or distant wildlife, but the primary source is clearly the creek and environmental forest sounds.",
+  "summary": "This 20-second recording exhibits a stable, ambient spectral profile. A dominant low-frequency component below 133 Hz\u2014likely representing a persistent hum from indoor sources such as ventilation or electrical systems\u2014is observed, while higher frequencies show lower, consistent energy. The overall sound is that of a quiet, controlled indoor environment with a continuous background noise rather than sporadic transient events.",
   "structured": {
     "source_type": [
-      "forest",
-      "water",
-      "creek",
-      "natural"
+      "ambient",
+      "indoor",
+      "electrical",
+      "background"
     ]
   }
 }

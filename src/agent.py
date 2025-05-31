@@ -97,7 +97,7 @@ async def run_agent(query: str, console: Console = Console()):
 
 if __name__ == "__main__":
     query = """
-    I want you to analyze an audio file and describe its spectral content. I want you to determine the likely sources of the audio based on its frequency characteristics and the context of the examples provided. I will walk you through some reasoning to help you do so. There are also tools at your disposal.
+    I want you to analyze an audio file and describe its spectral content. I want you to determine the likely sources of the audio based on its frequency characteristics and the context of the examples provided. I will walk you through some reasoning to help you do so. There are also tools at your disposal. Do not be satisfied with a single or broadband analysis. Instead, perform multiple FFTs at different resolutions to capture both short, transient events and longer, sustained trends. Use shorter time windows to catch brief, sharp peaks like clicks or speech fragments, and longer windows to reveal slower or more continuous signals like machinery hums or background noise. Pay close attention to how peaks and energy distributions change over time, which can tell you whether the source is static or dynamic. Use as many combinations of these FFTs as you need to fully understand the audio file. By layering insights from metadata, multiscale FFTs, and time-frequency patterns, you can build a clear understanding of what’s happening in the audio and where each signal component might be coming from. Use perplexity to search for similar audio files and their descriptions to help you understand the context of the audio file you are analyzing.
 
     Example Inputs and Outputs
 
@@ -308,7 +308,7 @@ if __name__ == "__main__":
         }
     }
     
-    Now analyze: ./data/audio20.mp3. This audio file contains a keyboard typing. Describe the spectral content and determine likely sources. End by calling `save_agent_output` with your result.
+    Now analyze: ./data/audio1.mp3. Analyze the audio file across frequency first, then time. Narrow in on interesting time frames as well as frequencies. Describe the spectral content and determine likely sources. End by calling `save_agent_output` with your result.
     """
 
 
