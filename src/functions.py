@@ -11,6 +11,7 @@ import wave
 import uuid
 import time
 import json
+from scipy.signal import hilbert
 
 load_dotenv()
 
@@ -211,6 +212,306 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5,
     # Create DataFrame and convert to CSV string
     df = pd.DataFrame(spectrogram, columns=["Time"] + bin_labels)
     return df.to_csv(index=False, float_format="%.3f")
+
+def zero_crossing_rate(file_path: str) -> str:
+    """
+    Computes the zero-crossing rate (ZCR) of a mono audio signal.
+    
+    Args:
+        file_path: Path to the input audio file (e.g., .m4a or .mp3).
+    
+    Returns:
+        CSV string with 'Time Window' and 'ZCR' columns for each time segment.
+    """
+
+    input_file_path = Path(file_path)
+
+    # Convert to WAV if necessary
+    if input_file_path.suffix.lower() != ".wav":
+        wav_path = input_file_path.with_suffix(".wav")
+        subprocess.run(
+            ['ffmpeg', '-y', '-i', str(input_file_path), str(wav_path)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True
+        )
+    else:
+        wav_path = input_file_path
+
+    signal, sample_rate = open_audio(str(wav_path))
+
+    if signal.ndim == 2:
+        signal = signal.mean(axis=1)
+
+    # Divide into 10 time windows
+    segments = np.array_split(signal, 30)
+    zcrs = []
+    for i, segment in enumerate(segments):
+        zero_crossings = np.sum(np.diff(np.sign(segment)) != 0)
+        zcr = zero_crossings / len(segment)
+        zcrs.append((f"Window {i+1}", zcr))
+
+    df = pd.DataFrame(zcrs, columns=["Time Window", "ZCR"])
+    return df.to_csv(index=False, float_format="%.5f")
+
+def autocorrelation(file_path: str, top_n: int = 5, segments: int = 10) -> str:
+    """
+    Computes normalized autocorrelation on segmented audio to identify repeating patterns.
+
+    Args:
+        file_path: Path to the input audio file (.mp3/.m4a/.wav)
+        top_n: Number of top peaks to return per segment
+        segments: Number of segments to divide the signal into
+
+    Returns:
+        CSV string: segment label, top lag (samples), strength
+    """
+
+    input_file_path = Path(file_path)
+
+    # Convert to WAV if needed
+    if input_file_path.suffix.lower() != ".wav":
+        wav_path = input_file_path.with_suffix(".wav")
+        subprocess.run(
+            ['ffmpeg', '-y', '-i', str(input_file_path), str(wav_path)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True
+        )
+    else:
+        wav_path = input_file_path
+
+    signal, _ = open_audio(str(wav_path))
+    if signal.ndim == 2:
+        signal = signal.mean(axis=1)
+
+    signal -= np.mean(signal)
+    parts = np.array_split(signal, segments)
+
+    results = []
+    for i, part in enumerate(parts):
+        corr = np.correlate(part, part, mode='full')
+        mid = len(corr) // 2
+        norm_corr = corr[mid:] / np.max(corr)
+
+        lags = np.arange(1, len(norm_corr))
+        strengths = norm_corr[1:]
+
+        # Find top N peaks beyond lag=0
+        top_indices = np.argpartition(strengths, -top_n)[-top_n:]
+        top_lags = lags[top_indices]
+        top_strengths = strengths[top_indices]
+
+        sorted_indices = np.argsort(top_lags)
+        top_lags = top_lags[sorted_indices]
+        top_strengths = top_strengths[sorted_indices]
+
+        for lag, strength in zip(top_lags, top_strengths):
+            results.append((f"Segment {i+1}", lag, strength))
+
+    df = pd.DataFrame(results, columns=["Segment", "Lag (samples)", "Autocorrelation"])
+    return df.to_csv(index=False, float_format="%.5f")
+
+def envelope_decay(file_path: str) -> str:
+    """
+    Computes the amplitude envelope and decay rate of a mono audio signal using the Hilbert transform.
+
+    Args:
+        file_path: Path to the input audio file (e.g., .m4a or .mp3).
+
+    Returns:
+        CSV string with envelope peak values in 10 segments and the overall decay rate.
+    """
+
+    input_file_path = Path(file_path)
+
+    # Convert to WAV if needed
+    if input_file_path.suffix.lower() != ".wav":
+        wav_path = input_file_path.with_suffix(".wav")
+        subprocess.run(
+            ['ffmpeg', '-y', '-i', str(input_file_path), str(wav_path)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True
+        )
+    else:
+        wav_path = input_file_path
+
+    signal, sample_rate = open_audio(str(wav_path))
+
+    if signal.ndim == 2:
+        signal = signal.mean(axis=1)
+
+    # Compute analytic signal and envelope
+    analytic_signal = hilbert(signal)
+    envelope = np.abs(analytic_signal)
+
+    # Break envelope into 10 windows, calculate mean amplitude per window
+    segments = np.array_split(envelope, 30)
+    segment_means = [np.mean(seg) for seg in segments]
+
+    # Estimate decay rate: (start - end) / num_samples
+    decay_rate = (segment_means[0] - segment_means[-1]) / len(signal)
+
+    df = pd.DataFrame({
+        "Segment": [f"Window {i+1}" for i in range(30)],
+        "Mean Amplitude": segment_means
+    })
+
+    df.loc[len(df.index)] = ["Decay Rate", decay_rate]
+
+    return df.to_csv(index=False, float_format="%.5f")
+
+def spectral_flatness(file_path: str) -> str:
+    """
+    Computes the spectral flatness of the audio signal across multiple time windows.
+
+    Spectral flatness values close to 0 indicate a tonal signal, and values near 1 indicate noise-like signals.
+
+    Args:
+        file_path: Path to the input audio file (e.g., .m4a or .mp3).
+
+    Returns:
+        CSV string with one row per time segment, containing flatness values.
+    """
+
+    input_file_path = Path(file_path)
+
+    # Convert to WAV if needed
+    if input_file_path.suffix.lower() != ".wav":
+        wav_path = input_file_path.with_suffix(".wav")
+        subprocess.run(
+            ['ffmpeg', '-y', '-i', str(input_file_path), str(wav_path)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True
+        )
+    else:
+        wav_path = input_file_path
+
+    signal, sample_rate = open_audio(str(wav_path))
+
+    if signal.ndim == 2:
+        signal = signal.mean(axis=1)
+
+    # Split into 10 segments
+    segments = np.array_split(signal, 30)
+    flatness_scores = []
+
+    for i, segment in enumerate(segments):
+        spectrum = np.fft.fft(segment)
+        power = np.abs(spectrum) ** 2 + 1e-12  # avoid log(0)
+        geom_mean = np.exp(np.mean(np.log(power)))
+        arith_mean = np.mean(power)
+        flatness = geom_mean / arith_mean
+        flatness_scores.append((f"Window {i+1}", flatness))
+
+    df = pd.DataFrame(flatness_scores, columns=["Segment", "Spectral Flatness"])
+    return df.to_csv(index=False, float_format="%.5f")
+
+def fractal_dimension(file_path: str) -> str:
+    """
+    Estimates the fractal dimension of an audio waveform using the Higuchi method.
+
+    Args:
+        file_path: Path to the input audio file (e.g., .m4a or .mp3)
+
+    Returns:
+        CSV string with estimated fractal dimension for the full waveform and for each of 10 windows.
+    """
+
+    def higuchi_fd(x, kmax):
+        L = []
+        x = np.asarray(x)
+        N = len(x)
+
+        for k in range(1, kmax+1):
+            Lk = []
+            for m in range(k):
+                idxs = np.arange(1, int(np.floor((N - m) / k)), dtype=int)
+                Lmk = np.sum(np.abs(x[m + idxs * k] - x[m + (idxs - 1) * k]))
+                Lmk *= (N - 1) / (len(idxs) * k)
+                Lk.append(Lmk)
+            L.append(np.mean(Lk))
+
+        lnL = np.log(L)
+        lnk = np.log(1.0 / np.arange(1, kmax+1))
+        coeffs = np.polyfit(lnk, lnL, 1)
+        return coeffs[0]  # slope = fractal dimension estimate
+
+    input_file_path = Path(file_path)
+
+    # Convert to WAV if needed
+    if input_file_path.suffix.lower() != ".wav":
+        wav_path = input_file_path.with_suffix(".wav")
+        subprocess.run(
+            ['ffmpeg', '-y', '-i', str(input_file_path), str(wav_path)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True
+        )
+    else:
+        wav_path = input_file_path
+
+    signal, _ = open_audio(str(wav_path))
+    if signal.ndim == 2:
+        signal = signal.mean(axis=1)
+
+    segments = np.array_split(signal, 30)
+    dimensions = [higuchi_fd(seg, kmax=10) for seg in segments]
+    overall = higuchi_fd(signal, kmax=30)
+
+    df = pd.DataFrame({
+        "Segment": [f"Window {i+1}" for i in range(30)] + ["Overall"], 
+        "Fractal Dimension": dimensions + [overall]
+    })
+
+    return df.to_csv(index=False, float_format="%.5f")
+
+def shannon_entropy(file_path: str) -> str:
+    """
+    Computes Shannon entropy of the audio waveform over 10 segments.
+
+    Args:
+        file_path: Path to the input audio file (e.g., .m4a or .mp3)
+
+    Returns:
+        CSV string with Shannon entropy per segment and overall.
+    """
+
+    def compute_entropy(segment, bins=64):
+        hist, _ = np.histogram(segment, bins=bins, density=True)
+        hist = hist[hist > 0]  # Remove zero entries to avoid log(0)
+        return -np.sum(hist * np.log2(hist))
+
+    input_file_path = Path(file_path)
+
+    if input_file_path.suffix.lower() != ".wav":
+        wav_path = input_file_path.with_suffix(".wav")
+        subprocess.run(
+            ['ffmpeg', '-y', '-i', str(input_file_path), str(wav_path)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True
+        )
+    else:
+        wav_path = input_file_path
+
+    signal, _ = open_audio(str(wav_path))
+    if signal.ndim == 2:
+        signal = signal.mean(axis=1)
+
+    segments = np.array_split(signal, 30)
+    entropies = [compute_entropy(seg) for seg in segments]
+    overall = compute_entropy(signal)
+
+    df = pd.DataFrame({
+        "Segment": [f"Window {i+1}" for i in range(30)] + ["Overall"],
+        "Shannon Entropy": entropies + [overall]
+    })
+
+    return df.to_csv(index=False, float_format="%.5f")
+
 
 def save_agent_output(file_name, summary_text, source_types):
     """

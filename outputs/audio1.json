@@ -1,10 +1,10 @@
 {
-  "summary": "This clip primarily contains a low-frequency hum around 80\u2013120 Hz consistent with engine or mechanical equipment operation. Slight broadband presence is noted, but no distinct speech or musical tones are apparent.",
+  "summary": "The audio file features a continuous, low-frequency tonal signal with dominant energy between approximately 66 and 100 Hz, with additional but lower energy up to about 500 Hz. The constant amplitude envelope, very low spectral flatness, low fractal dimension, and low Shannon entropy indicate a steady, simple waveform. The autocorrelation and zero crossing rate further support the observation of a sustained tone with minimal transient or noisy characteristics. These spectral characteristics point to a man-made source, likely an electrical or mechanical hum such as from a transformer, HVAC system, or motor-driven device.",
   "structured": {
     "source_type": [
-      "machine",
-      "engine",
-      "hum"
+      "electrical hum",
+      "HVAC/motor",
+      "mechanical"
     ]
   }
 }
