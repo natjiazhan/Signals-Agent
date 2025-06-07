@@ -1,10 +1,11 @@
 {
-  "summary": "The audio file features a continuous, low-frequency tonal signal with dominant energy between approximately 66 and 100 Hz, with additional but lower energy up to about 500 Hz. The constant amplitude envelope, very low spectral flatness, low fractal dimension, and low Shannon entropy indicate a steady, simple waveform. The autocorrelation and zero crossing rate further support the observation of a sustained tone with minimal transient or noisy characteristics. These spectral characteristics point to a man-made source, likely an electrical or mechanical hum such as from a transformer, HVAC system, or motor-driven device.",
+  "summary": "This audio file, lasting around 20 seconds, is dominated by a sustained low-frequency hum with most energy in the 0\u2013133 Hz band. The signal's steady amplitude, low zero crossing rate, very low spectral flatness, low complexity (as indicated by fractal dimension), and extremely low Shannon entropy point to a highly tonal, machine-like source. These spectral characteristics are typical of electrical or mechanical hums, such as those produced by transformers, HVAC systems, or motors.",
   "structured": {
     "source_type": [
-      "electrical hum",
-      "HVAC/motor",
-      "mechanical"
+      "electrical",
+      "mechanical",
+      "machine-generated",
+      "hum"
     ]
   }
 }
