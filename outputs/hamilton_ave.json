@@ -1,11 +1,11 @@
 {
-  "summary": "The audio file from Hamilton Ave exhibits a dominant, highly tonal, and periodic signal with energy concentrated below 533 Hz. Zero crossing rates and autocorrelation confirm a smooth, synthesized sound profile, while extremely low spectral flatness, low fractal dimension, and very low Shannon entropy indicate a highly controlled, machine-like tone. Although recorded in a collaborative tech event setting (as inferred from the associated image), the spectral data suggest that the audio is dominated by an electronic, ambient background tone rather than natural speech or environmental noise.",
+  "summary": "The analysis indicates that the audio recording from Hamilton Ave captures a collaborative, conference-room environment dominated by human conversation. The zero-crossing rate, autocorrelation, and amplitude envelope are consistent with human speech, while the extremely low spectral flatness shows that energy is concentrated in distinct tonal bands. The fractal dimension remains relatively low, highlighting the structured nature of the waveform, with occasional transient peaks indicating brief louder events or sharper sounds. Overall, the evidence suggests that the primary sources are human voices with possible background contributions from ambient electronic devices.",
   "structured": {
     "source_type": [
-      "synthesized",
-      "electronic",
-      "ambient",
-      "tech event"
+      "human",
+      "conversation",
+      "conference",
+      "electronic ambient"
     ]
   }
 }
