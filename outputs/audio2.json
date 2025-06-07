@@ -1,10 +1,11 @@
 {
-  "summary": "The audio is dominated by a continuous low-frequency ambient hum below 200 Hz, possibly from building machinery or HVAC. An intermittent event between 46.55 and 52.37 seconds introduces midrange tonal peaks around 960\u2013986 Hz and 1466\u20131493 Hz, which are characteristic of digital or electronic alert tones.",
+  "summary": "The audio clip, set in a first-person shooter game scene on a yacht, features a dominant, sustained low-frequency tonal ambient sound. This is likely representative of engine hum or synthetic background tones typical of man-made game audio. The signal\u2019s stable periodicity, very low spectral flatness, and structured envelope suggest a synthesized source. A sudden transient in one window, indicated by a high zero-crossing rate, may correspond to a weapon sound or explosion effect.",
   "structured": {
     "source_type": [
-      "ambient",
-      "mechanical",
-      "electronic"
+      "game sound",
+      "ambient engine hum",
+      "synthesized",
+      "weapon action"
     ]
   }
 }

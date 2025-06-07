@@ -77,7 +77,7 @@ def analyze_image(image_path: str, prompt: str = "Describe this scene in one sen
             image_data = base64.b64encode(f.read()).decode("utf-8")
 
         response = client.chat.completions.create(
-            model="gpt-4-vision-preview",
+            model="gpt-4o",
             messages=[
                 {
                     "role": "user",
@@ -248,6 +248,113 @@ def fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5,
 
     # Create DataFrame and convert to CSV string
     df = pd.DataFrame(spectrogram, columns=["Time"] + bin_labels)
+    return df.to_csv(index=False, float_format="%.3f")
+
+def stereo_fft(file_path, cutoff_lo, cutoff_hi, start_sec=0, end_sec=None, time_bins=5, freq_bins=15, verbose=False):
+    """
+    Computes stereo time-frequency spectrograms as a CSV-formatted string for both left and right channels.
+    Each row contains spectral energy for left and right channels across frequency bins and time windows.
+
+    Args:
+        file_path: Path to the stereo audio file (e.g., .wav, .mp3).
+        cutoff_lo: Lower frequency bound in Hz.
+        cutoff_hi: Upper frequency bound in Hz.
+        start_sec: Start time in seconds.
+        end_sec: End time in seconds (None = full duration).
+        time_bins: Number of time segments.
+        freq_bins: Number of frequency bins.
+
+    Returns:
+        CSV string with columns: Time, L:bin1, ..., L:binN, R:bin1, ..., R:binN
+    """
+    input_file_path = Path(file_path)
+
+    # Convert to .wav if needed
+    if input_file_path.suffix.lower() != '.wav':
+        wav_file = input_file_path.with_suffix('.wav')
+        stdout = subprocess.DEVNULL if not verbose else None
+        stderr = subprocess.DEVNULL if not verbose else None
+        subprocess.run(['ffmpeg', '-y', '-i', str(input_file_path), str(wav_file)],
+                       stdout=stdout, stderr=stderr, check=True)
+    else:
+        wav_file = input_file_path
+
+    signal, sample_rate = open_audio(str(wav_file))
+
+    if signal.ndim != 2:
+        raise ValueError("Input file must be stereo (2 channels).")
+
+    # Extract channels
+    left = signal[:, 0]
+    right = signal[:, 1]
+
+    # Trim both to the selected segment
+    start_sample = int(start_sec * sample_rate)
+    if not end_sec:
+        end_sec = len(left) / sample_rate
+    end_sample = int(end_sec * sample_rate)
+
+    left = left[start_sample:end_sample]
+    right = right[start_sample:end_sample]
+
+    # Time segmentation
+    total_samples = len(left)
+    window_size = int(total_samples / time_bins)
+
+    # Frequency bins
+    bin_edges = np.linspace(cutoff_lo, cutoff_hi, freq_bins + 1)
+    bin_labels = [f"{int(bin_edges[i])}-{int(bin_edges[i+1])}Hz" for i in range(freq_bins)]
+
+    spectrogram = []
+
+    for w in range(time_bins):
+        start = w * window_size
+        end = start + window_size
+
+        # Left and Right segments
+        seg_l = left[start:end]
+        seg_r = right[start:end]
+
+        # FFT
+        fft_l = np.fft.fft(seg_l)
+        fft_r = np.fft.fft(seg_r)
+        freq = np.fft.fftfreq(len(seg_l), d=1/sample_rate)
+
+        power_l = np.abs(fft_l)**2
+        power_r = np.abs(fft_r)**2
+
+        # Mask frequencies within cutoff
+        mask = (freq >= cutoff_lo) & (freq <= cutoff_hi)
+        freq = freq[mask]
+        power_l = power_l[mask]
+        power_r = power_r[mask]
+
+        # Bin
+        indices = np.digitize(freq, bin_edges) - 1
+        binned_l = np.zeros(freq_bins)
+        binned_r = np.zeros(freq_bins)
+
+        for i in range(len(freq)):
+            if 0 <= indices[i] < freq_bins:
+                binned_l[indices[i]] += power_l[i]
+                binned_r[indices[i]] += power_r[i]
+
+        # Normalize
+        if np.sum(binned_l) > 0:
+            binned_l /= np.sum(binned_l)
+        if np.sum(binned_r) > 0:
+            binned_r /= np.sum(binned_r)
+
+        # Time label
+        start_time = round(start_sec + w * ((end_sec - start_sec) / time_bins), 2)
+        end_time = round(start_time + ((end_sec - start_sec) / time_bins), 2)
+        time_label = f"{start_time:.2f}-{end_time:.2f}sec"
+
+        # Append both channels
+        spectrogram.append([time_label] + list(binned_l) + list(binned_r))
+
+    # Build final DataFrame
+    df = pd.DataFrame(spectrogram, columns=["Time"] + [f"L:{b}" for b in bin_labels] + [f"R:{b}" for b in bin_labels])
     return df.to_csv(index=False, float_format="%.3f")
 
 def zero_crossing_rate(file_path: str) -> str:

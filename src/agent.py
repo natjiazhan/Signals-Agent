@@ -5,11 +5,12 @@ from llama_index.core.workflow import Context
 from llama_index.core.agent.workflow import AgentStream, ToolCallResult
 from llama_index.core.tools.types import ToolOutput
 from functions import (
-    search_perplexity, 
-    fft, 
-    file_meta_data, 
+    search_perplexity,
+    fft,
+    stereo_fft,
+    file_meta_data,
     analyze_image,
-    save_agent_output, 
+    save_agent_output,
     zero_crossing_rate,
     autocorrelation,
     envelope_decay,
@@ -38,6 +39,7 @@ logging.basicConfig(level=logging.WARNING)
 # Available tools
 tools = [
     fft,
+    stereo_fft,
     search_perplexity,
     file_meta_data,
     analyze_image,
@@ -121,9 +123,9 @@ async def run_agent(query: str, console: Console = Console()):
 
 if __name__ == "__main__":
     query = """
-    Now analyze: ./data/audio1.mp3.
-    Use the image to help give context to the audio file: ./data/audio1.jpg.
-    Analyze the audio file using combinations of FFT, zero crossing rate, autocorrelation, envelope and decay analysis, spectral flatness, fractal dimension, and Shannon entropy. Begin with broad fft scans to identify dominant spectral features, then use targeted FFTs with varying time and frequency resolutions to isolate transient versus sustained signals. Use autocorrelation to detect periodicity or rhythmic structures, and zero_crossing_rate to assess noisiness or sharp temporal features.
+    Now analyze: ./data/hamilton_ave.m4a
+    Use the image to help give context to the audio file: ./data/hamilton_ave.jpeg
+    Analyze the audio file using combinations of stereo_fft, zero crossing rate, autocorrelation, envelope and decay analysis, spectral flatness, fractal dimension, and Shannon entropy. Begin with broad fft scans to identify dominant spectral features, then use targeted FFTs with varying time and frequency resolutions to isolate transient versus sustained signals. Use autocorrelation to detect periodicity or rhythmic structures, and zero_crossing_rate to assess noisiness or sharp temporal features.
 
     Next, run envelope_and_decay to analyze amplitude dynamics, and apply spectral_flatness to assess the tonality versus noisiness of the signal. Use fractal_dimension to measure waveform complexity and shannon_entropy to evaluate information density and randomness. Describe what each tool reveals about the nature of the signal. 
     
