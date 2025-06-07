@@ -11,6 +11,7 @@ openinference-instrumentation-llama-index==4.2.1
 opentelemetry-exporter-otlp-proto-http==1.31.1
 opentelemetry-sdk==1.31.1
 pandas==2.2.3
+pillow
 python-dotenv==1.1.0
 pyaudio==0.2.14
 pytest
