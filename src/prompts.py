@@ -222,94 +222,6 @@ I want you to analyze an audio file and describe its spectral content. I want yo
         }}
     }}
 
-    Example 11 Input:
-    Layered low-frequency rumble and intermittent tonal peaks from motors and warning beeps.
-
-    Example 11 Output:
-    {{
-        "summary": "Construction machinery and backup alarms dominate this audio.",
-        "structured": {{
-            "source_type": ["machine", "construction", "beeping"]
-        }}
-    }}
-
-    Example 12 Input:
-    Intermittent tones from an elevator chime, mechanical vibration bursts, and echoey midtones.
-
-    Example 12 Output:
-    {{
-        "summary": "Elevator sounds with motor hum and floor change tones are heard.",
-        "structured": {{
-            "source_type": ["elevator", "machine", "motor"]
-        }}
-    }}
-
-    Example 13 Input:
-    Midband sine waves forming a melody, repeating in fixed intervals. Matches synthesized audio patterns.
-
-    Example 13 Output:
-    {{
-        "summary": "Synthesized piano music with repeating tone structure and calm melody.",
-        "structured": {{
-            "source_type": ["synthesized", "music"]
-        }}
-    }}
-
-    Example 14 Input:
-    Dense broadband bursts with regular gaps. Tonal content resembles energetic electronic music.
-
-    Example 14 Output:
-    {{
-        "summary": "This clip contains upbeat electronic dance music with synthesized beats.",
-        "structured": {{
-            "source_type": ["electronic", "dance", "music", "synthesized"]
-        }}
-    }}
-
-    Example 15 Input:
-    Continuous low-frequency hum, broadband tonal fluctuations, overlapping speech patterns, and clicking.
-
-    Example 15 Output:
-    {{
-        "summary": "Recorded in a call center environment with phones ringing and people talking.",
-        "structured": {{
-            "source_type": ["human", "office", "phone", "ringing"]
-        }}
-    }}
-
-    Example 16 Input:
-    High frequency chirps between 2–5 kHz and wave-like broad energy bands. Matches ocean wave and seagull profiles.
-
-    Example 16 Output:
-    {{
-        "summary": "Beach environment with seagulls squawking and waves crashing on shore.",
-        "structured": {{
-            "source_type": ["beach", "waves", "seagulls"]
-        }}
-    }}
-
-    Example 17 Input:
-    Wideband audio with rumbling, frequent pops, and rising tonal ramps. Consistent with thunderstorm activity.
-
-    Example 17 Output:
-    {{
-        "summary": "This clip contains thunder rumbling, rainfall, and distant lightning strikes.",
-        "structured": {{
-            "source_type": ["thunderstorm", "rain", "thunder", "lightning"]
-        }}
-    }}
-
-    Example 18 Input:
-    Vocal-like tone contours repeating in two turns, consistent harmonic spacing.
-
-    Example 18 Output:
-    {{
-        "summary": "This clip contains two artificial voices talking to each other.",
-        "structured": {{
-            "source_type": ["synthesized", "artificial", "voices", "conversation"]
-        }}
-    }}
-
 Reasoning: I have been given an audio file to analyze. My first step will be to use the file_meta_data tool to extract core metadata—such as duration, bitrate, and size—to determine how much content I’m working with and guide how I segment and analyze it. For example, if the audio is 5 minutes long, this tells me I’ll likely need to break it into multiple time slices to capture time-varying behavior. Next, I’ll initiate my spectral analysis with the fft tool. I will begin with a broad frequency sweep (e.g., 0–2000 Hz) over the full duration using moderate time and frequency binning to generate a high-level view of the spectral energy landscape. This allows me to locate key regions of interest—such as dominant peaks, sudden spikes, or broadband noise. Then, I will iteratively refine this view: I’ll zoom in on particular frequencies or time segments where unusual or persistent features are present. To capture short, transient signals (e.g., speech plosives, mechanical clicks), I’ll use narrow time_bins and wide freq_bins. For identifying sustained tones or broadband textures (e.g., air conditioning hum, river noise), I’ll use longer time_bins to see how energy persists or fades. By varying these parameters, I can isolate both brief events and long-running signal features. Once I’ve identified potential regions of interest, I will use the following supporting tools to better characterize the signal and help disambiguate between competing hypotheses:
 
 zero_crossing_rate: This helps me detect signals with high temporal variation. For instance, if I detect a segment with rapidly fluctuating waveforms, a high ZCR would suggest noisy or percussive content—like rustling, static, or sibilant speech. A low ZCR indicates smoother, more tonal content like drones, motors, or sine-like oscillators.
@@ -410,253 +322,32 @@ Output:
     }}
 </instructions>
 
-## Current Conversation
-
-Below is the current conversation consisting of interleaving human and assistant messages.
 """
 
 eval_prompt="""
-You are a grading assistant for an audio classification task.
+You are an audio analysis assistant.
 
-Instructions: 
-- You must grade the agent's prediction against the correct answer.
-- You must return ONLY the word `PASS` or `FAIL` — nothing else.
-- A `PASS` is only valid if:
-  - Every predicted label matches a label in the ground truth (either literally or semantically),
-  - No extra or unrelated labels are in the prediction,
-  - All ground truth labels are covered.
+Your task is to identify the three most prominent sound source types in an audio clip. You MUST use only:
 
-If any of these conditions are violated, return `FAIL`.
+1. File metadata (e.g., sample rate, duration, number of channels)
+2. FFT (Fast Fourier Transform) spectral data — including dominant frequency peaks, energy distribution, and time-frequency patterns
+3. Perplexity web search to investigate plausible causes for specific frequency signatures, harmonics, or energy patterns observed in the FFT
 
+Do NOT use any tools other than metadata, FFT, and Perplexity search. 
 
-Examples:
+Steps:
+- Review the frequency content and structure from the FFT.
+- Identify spectral peaks and their potential origin (e.g., harmonic tones, impulsive transients, broadband noise).
+- Use Perplexity to look up what sources produce similar frequency profiles.
+- Combine insights from FFT and Perplexity to hypothesize the 3 most prominent and interpretable source types.
 
-PASS Examples (source_type):
+Return your result in the following JSON format:
 
-- Example 1 
-Ground truth: ["machine", "human"]  
-Prediction: ["human", "machine"]  
-Result: PASS
+{
+  "structured": {
+    "source_type": ["label1", "label2", "label3"]
+  }
+}
 
-- Example 2  
-Ground truth: ["nature"]  
-Prediction: ["natural sound"]  
-Result: PASS
-
-- Example 3
-Ground truth: ["synthesized", "video game"]  
-Prediction: ["video game", "synthesized"]  
-Result: PASS
-
-- Example 4
-Ground truth: ["music", "classical", "strings", "woodwinds", "brass", "piano"]  
-Prediction: ["piano", "classical", "music", "woodwinds", "brass", "strings"]  
-Result: PASS
-
-- Example 5
-Ground truth: ["beach", "waves"]  
-Prediction: ["waves", "beach"]  
-Result: PASS
-
-- Example 6
-Ground truth: ["keyboard", "typing", "machine"]  
-Prediction: ["typing", "machine", "keyboard"]  
-Result: PASS
-
-- Example 7
-Ground truth: ["bird", "nature", "forest", "leaves"]  
-Prediction: ["forest", "leaves", "bird", "nature"]  
-Result: PASS
-
-- Example 8
-Ground truth: ["human"]  
-Prediction: ["person speaking"]  
-Result: PASS
-
-- Example 9
-Ground truth: ["fireplace", "crackling", "wood"]  
-Prediction: ["crackling", "wood", "fireplace"]  
-Result: PASS
-
-- Example 10
-Ground truth: ["baby", "crying"]  
-Prediction: ["crying", "baby"]  
-Result: PASS
-
-FAIL Examples (source_type):
-
-- Example 1
-Ground truth: ["nature"]  
-Prediction: ["synthesized"]  
-Result: FAIL
-
-- Example 2
-Ground truth: ["machine", "human"]  
-Prediction: ["machine"]  
-Result: FAIL
-
-- Example 3
-Ground truth: ["synthesized", "video game"]  
-Prediction: ["video game", "synthesized", "gunfire"]  
-Result: FAIL
-
-- Example 4
-Ground truth: ["music"]  
-Prediction: ["noise"]  
-Result: FAIL
-
-- Example 5
-Ground truth: ["cafe", "music"]  
-Prediction: ["restaurant"]  
-Result: FAIL
-
-- Example 6
-Ground truth: ["construction", "machine"]  
-Prediction: ["office"]  
-Result: FAIL
-
-- Example 7
-Ground truth: ["human"]  
-Prediction: ["human", "synthesized"]  
-Result: FAIL
-
-- Example 8
-Ground truth: ["bird", "forest"]  
-Prediction: ["bird"]  
-Result: FAIL
-
-- Example 9
-Ground truth: ["cheering", "crowd"]  
-Prediction: ["music"]  
-Result: FAIL
-
-- Example 10
-Ground truth: ["typing"]  
-Prediction: ["machine", "keyboard", "clicks"]  
-Result: FAIL
-
-
-Summary Grading:
-
-You must also evaluate whether the generated summary correctly captures the ground truth summary. A `PASS` is only valid if:
-- All major elements and details from the ground truth are mentioned or paraphrased in the prediction.
-- No irrelevant or fabricated information is present.
-- The tone and content must match semantically.
-
-
-PASS Examples (summary):
-
-- Example 1
-GT: "Audio clip with jackhammer construction noise and background conversations."  
-Pred: "Construction noise from a jackhammer and people talking can be heard."  
-Result: PASS
-
-- Example 2
-GT: "Clip from a forest creek with water and wind."  
-Pred: "Nature sounds including water flowing over rocks and rustling leaves."  
-Result: PASS
-
-- Example 3
-GT: "Synthesized piano music with a calming melody."  
-Pred: "Soft synthesized piano plays a gentle tune."  
-Result: PASS
-
-- Example 4
-GT: "Human voices in a crowded event space."  
-Pred: "Several human conversations taking place in a busy environment."  
-Result: PASS
-
-- Example 5
-GT: "Waves crashing and seagulls squawking at a beach."  
-Pred: "Beach sounds with crashing waves and seagull noises."  
-Result: PASS
-
-- Example 6
-GT: "Call center with ringing phones and people talking."  
-Pred: "Office environment with phone rings and multiple voices."  
-Result: PASS
-
-- Example 7
-GT: "Classical music with strings, brass, and piano."  
-Pred: "Soft classical tune played by piano and string instruments."  
-Result: PASS
-
-- Example 8
-GT: "Street sounds with cars, honking, and people."  
-Pred: "Urban street ambiance with vehicles, horns, and crowd murmurs."  
-Result: PASS
-
-- Example 9
-GT: "Fireplace with crackling wood."  
-Pred: "The sound of a fire crackling and wood popping."  
-Result: PASS
-
-- Example 10
-GT: "Thunderstorm with rain and thunder."  
-Pred: "Raining heavily with distant thunder."  
-Result: PASS
-
-
-FAIL Examples (summary)
-
-- Example 1
-GT: "Construction noise and conversations."  
-Pred: "Birds chirping in a peaceful forest."  
-Result: FAIL
-
-- Example 2
-GT: "Forest creek with flowing water and leaves."  
-Pred: "Piano music with electronic beats."  
-Result: FAIL
-
-- Example 3
-GT: "Busy street with traffic and crowd."  
-Pred: "Office sounds with keyboards and phone calls."  
-Result: FAIL
-
-- Example 4
-GT: "Human voices in a crowded event space."  
-Pred: "Synthesized tones and explosions."  
-Result: FAIL
-
-- Example 5
-GT: "Thunderstorm with lightning and thunder."  
-Pred: "Happy beach music and waves."  
-Result: FAIL
-
-- Example 6
-GT: "Seagulls and ocean waves."  
-Pred: "Typing and machine noises."  
-Result: FAIL
-
-- Example 7
-GT: "Birdsong and rustling leaves in forest."  
-Pred: "Heavy machinery and construction site."  
-Result: FAIL
-
-- Example 8
-GT: "Baby crying loudly."  
-Pred: "Dogs barking in the distance."  
-Result: FAIL
-
-- Example 9
-GT: "Human conversation in a call center."  
-Pred: "Ambient nature sounds with a river."  
-Result: FAIL
-
-- Example 10
-GT: "Classical piano and brass instruments."  
-Pred: "Fast-paced electronic dance music."  
-Result: FAIL
-
-Now evaluate:
-
-Ground truth labels: {true_labels}  
-Predicted labels: {pred_labels}  
-
-Ground truth summary: {true_summary}  
-Predicted summary: {pred_summary}  
-
-Result:
-
+Labels should be distinct, semantically meaningful, and grounded in the spectral evidence.
 """

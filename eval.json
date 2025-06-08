@@ -2,73 +2,73 @@
   "hamilton_ave.m4a": {
     "summary": "This is an audio clip taken at an eventspace with construction next door. This clip contains several human conversations in the background and construction noise from a jackhammer. Background noise from an HVAC system is also present.",
     "structured": {
-      "source_type": ["machine", "human"]
+      "source_type": ["human conversations", "construction", "HVAC"]
     }
   },
   "audio1.mp3": {
     "summary": "This is an audio clip taken at a flowing creek in a forest. The clip contains the sound of water flowing over rocks and the rustling of leaves in the wind.",
     "structured": {
-      "source_type": ["nature"]
+      "source_type": ["natural", "creek", "water"]
     }
   },
   "audio2.mp3": {
     "summary": "This clip contains synthesized tones resembling video game sound effects. There are human voicelines, footsteps, lots of gunfire, drone flight sounds, mechanical beeps and clicks, and explosions in the background.",
     "structured": {
-      "source_type": ["synthesized", "video game"]
+      "source_type": ["video game", "gunfire", "explosions"]
     }
   },
   "audio3.mp3": {
     "summary": "This clip contains synthesized piano music with a soft and calming melody.",
     "structured": {
-      "source_type": ["synthesized", "music"]
+      "source_type": ["synthesized", "music", "piano"]
     }
   },
   "audio4.mp3": {
     "summary": "This clip contains human speech in a crowded event space. The background noise includes chatter with several conversations in the background.",
     "structured": {
-      "source_type": ["human"]
+      "source_type": ["human speech", "human conversations", "event"]
     }
   },
   "audio5.mp3": {
     "summary": "This clip contains human speech in a call center office. There are lots of human conversations with intermittent beeps and ringing from phone calls. There may also be soft HVAC noise in the background.",
     "structured": {
-      "source_type": ["human", "office", "phone", "ringing"]
+      "source_type": ["human speech", "HVAC", "phone"]
     }
   },
   "audio6.mp3": {
     "summary": "This clip is taken at a construction site. The audio contains the sound of heavy machinery. There are lots of motors running from the heavy machinery as well as beeping from the trucks backing up.",
     "structured": {
-      "source_type": ["machine", "construction", "heavy machinery", "beeping"]
+      "source_type": ["construction", "heavy machinery", "motors"]
     }
   },
   "audio7.mp3": {
     "summary": "This clip is taken at a busy cafe with many human conversations in the background. There is also the sound of coffee machines and dishes clinking. There is some pop music playing in the background.",
     "structured": {
-      "source_type": ["human", "cafe", "coffee machine", "dishes", "music"]
+      "source_type": ["human", "cafe", "music"]
     }
   },
   "audio8.mp3": {
     "summary": "This clip was taken at a large stadium. There is a large crowd cheering, clapping, yelling, and whistling.",
     "structured": {
-      "source_type": ["cheering", "crowd", "clapping", "yelling", "whistling"]
+      "source_type": ["cheering", "crowd", "clapping"]
     }
   },
   "audio9.mp3": {
     "summary": "This is a clip taken while a baby is crying.",
     "structured": {
-      "source_type": ["baby", "crying"]
+      "source_type": ["baby", "crying", "human"]
     }
   },
   "audio10.mp3": {
     "summary": "This clip was taken in the middle of a forest with lots of birds around. There are many bird songs as well as the sound of leaves rustling in the wind.",
     "structured": {
-      "source_type": ["bird", "nature", "forest", "leaves"]
+      "source_type": ["bird", "natural", "forest"]
     }
   },
   "audio11.mp3": {
     "summary": "This clip was taken at a beach. There are waves crashing on the shore.",
     "structured": {
-      "source_type": ["nature", "beach", "waves"]
+      "source_type": ["natural", "beach", "waves"]
     }
   },
   "audio12.mp3": {
@@ -80,43 +80,43 @@
   "audio13.mp3": {
     "summary": "This clip was taken at a beach. There are waves crashing on the shore and many seagulls squawking in the background.",
     "structured": {
-      "source_type": ["nature", "beach", "waves", "seagulls"]
+      "source_type": ["beach", "waves", "seagulls"]
     }
   },
   "audio14.mp3": {
     "summary": "This clip contains classical music. There are strings, woodwinds, brass, and piano instruments playing together. The music is soft and calming.",
     "structured": {
-      "source_type": ["music", "classical", "strings", "woodwinds", "brass", "piano"]
+      "source_type": ["music", "instruments", "classical"]
     }
   },
   "audio15.mp3": {
     "summary": "This clip contains electronic dance music. There are synthesized beats and melodies with a fast tempo. The music is upbeat and energetic.",
     "structured": {
-      "source_type": ["electronic", "dance", "music", "synthesized", "beats"]
+      "source_type": ["music", "synthesized", "electronic"]
     }
   },
   "audio16.mp3": {
     "summary": "This clip contains two artificial voices talking to each other.",
     "structured": {
-      "source_type": ["synthesized", "artificial", "voices", "conversation", "speech"]
+      "source_type": ["artificial", "conversation", "synthesized speech"]
     }
   },
   "audio17.mp3": {
     "summary": "This clip was taken during a thunderstorm. There is the sound of rain falling, thunder rumbling, and occasional lightning strikes.",
     "structured": {
-      "source_type": ["nature", "thunderstorm", "rain", "thunder", "lightning"]
+      "source_type": ["natural", "rain", "thunder"]
     }
   },
   "audio18.mp3": {
     "summary": "This clip was taken in an elevator. There is the sound of the elevator moving, beeping, and office building ambiance.",
     "structured": {
-      "source_type": ["elevator", "machine", "motor", "beeping", "office"]
+      "source_type": ["elevator", "machine", "motor"]
     }
   },
   "audio19.mp3": {
     "summary": "This clip was taken on a busy street. There are cars driving by, and the occasional honking of horns. In the background, there are some birds chirping. You can sometimes hear the intersection walk sign beeping. There is are some bell tolls in the background. There are some human conversations and footsteps in the background as well.",
     "structured": {
-      "source_type": ["street", "cars", "horns", "birds", "chirping", "beeping", "human", "footsteps", "bells"]
+      "source_type": ["car", "human conversation", "footsteps"]
     }
   },
   "audio20.mp3": {
