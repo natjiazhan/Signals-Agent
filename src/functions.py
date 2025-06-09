@@ -665,17 +665,18 @@ def shannon_entropy(file_path: str) -> str:
     return df.to_csv(index=False, float_format="%.5f")
 
 
-def save_agent_output(file_name, summary_text, source_types):
+def save_agent_output(file_name, source_types):
     """
     Save agent output in the required JSON format for evaluation.
 
     Args:
         file_name (str): Path to the input audio file (e.g. data/audio1.mp3)
-        summary_text (str): Agent-generated description of the audio
         source_types (list[str]): List of source type labels
+
+    Returns: output_path (str)
+
     """
     output = {
-        "summary": summary_text,
         "structured": {
             "source_type": source_types
         }
@@ -690,6 +691,7 @@ def save_agent_output(file_name, summary_text, source_types):
         json.dump(output, f, indent=2)
 
     print(f"Saved prediction to: {out_path}")
+    return out_path
 
 def record_audio(duration=10, sample_rate=44100, channels=1, format=pyaudio.paInt16, chunk=1024):
     """

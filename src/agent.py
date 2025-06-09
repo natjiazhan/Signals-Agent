@@ -7,11 +7,10 @@ from llama_index.core.tools.types import ToolOutput
 from functions import (
     search_perplexity,
     fft,
-    stereo_fft,
-    overlay_stereo,
     file_meta_data,
-    analyze_image,
     save_agent_output,
+    stereo_fft,
+    analyze_image,
     zero_crossing_rate,
     autocorrelation,
     envelope_decay,
@@ -20,7 +19,7 @@ from functions import (
     shannon_entropy
 )
 from tracing import setup_tracing
-from prompts import system_prompt, eval_prompt
+from prompts import system_prompt
 import os
 import logging
 import asyncio
@@ -39,13 +38,12 @@ logging.basicConfig(level=logging.WARNING)
 
 # Available tools
 tools = [
-    fft,
-    stereo_fft,
-    overlay_stereo,
     search_perplexity,
+    fft,
     file_meta_data,
-    analyze_image,
     save_agent_output,
+    stereo_fft,
+    analyze_image,
     zero_crossing_rate,
     autocorrelation,
     envelope_decay,
@@ -68,7 +66,7 @@ async def run_agent(query: str, console: Console = Console()):
 
     llm = OpenAI(model="o3-mini", api_key=openai_api_key, temperature=1.2)
     agent = ReActAgent(tools=tools, llm=llm)
-    agent.update_prompts({"react_header": PromptTemplate(eval_prompt)}) # change the prompt here for eval or running normally
+    agent.update_prompts({"react_header": PromptTemplate(system_prompt)})
 
     ctx = Context(agent)
     handler = agent.run(query, ctx=ctx)
@@ -123,17 +121,35 @@ async def run_agent(query: str, console: Console = Console()):
 
     response = await handler
 
-if __name__ == "__main__":
+if __name__ == "__main__" and os.getenv("EVAL_MODE") != "1":
     query = """
-    Now analyze: ./data/audio6.mp3
-    Use the image to help give context to the audio file: ./data/audio6.png
+    Now analyze: ./data/audio1.mp3
+    Use the image to help give context to the audio file: ./data/audio1.png
     Analyze the audio file using combinations of stereo_fft, zero crossing rate, autocorrelation, envelope and decay analysis, spectral flatness, fractal dimension, and Shannon entropy. Begin with broad fft scans to identify dominant spectral features, then use targeted FFTs with varying time and frequency resolutions to isolate transient versus sustained signals. Use autocorrelation to detect periodicity or rhythmic structures, and zero_crossing_rate to assess noisiness or sharp temporal features.
 
     Next, run envelope_and_decay to analyze amplitude dynamics, and apply spectral_flatness to assess the tonality versus noisiness of the signal. Use fractal_dimension to measure waveform complexity and shannon_entropy to evaluate information density and randomness. Describe what each tool reveals about the nature of the signal. 
-    
+
     Throughout your analysis, use insights from one tool to guide deeper investigation with others. Describe all spectral content and temporal structure you observe. Based on this evidence, determine the most likely sources of the signal. Stay curious and keep an open mind while exploring the data, continuously question yourself and use the tools however you see fit to uncover the most interesting aspects of the audio.
     End by calling save_agent_output with your result.
     """
-
-
     asyncio.run(run_agent(query))
+
+# Batch evaluation mode for scoring multiple audio files
+async def run_all_files():
+    audio_files = sorted(glob.glob("./data/*.mp3") + glob.glob("./data/*.m4a"))
+
+    for audio_file in audio_files:
+        query = f"""
+        You are an audio evaluation assistant.
+
+        Analyze the file: {audio_file}
+
+        Do not write out agent thoughts or tool results in the console. Only return the final result. 
+
+        Call save_agent_output() once with your result at the end.
+        """
+        print(f"\n=== Analyzing {audio_file} ===")
+        await run_agent(query)
+
+if __name__ == "__main__" and os.getenv("EVAL_MODE") == "1":
+    asyncio.run(run_all_files())

@@ -23,7 +23,7 @@ Your initial search should cover the entire range of possible frequencies, from 
 
 - Try to pursue multiple lines of inquiry and be holistic in considering the full range of sounds or signals produced in the environment and/or nature.
 
-In addition to fft, you have tools to help disambiguate overlapping sources or confusing signals. Use these to validate or refine your hypotheses:
+In addition to fft, you have tools to help disambiguate overlapping sources or confusing signals if available. Use these to validate or refine your hypotheses:
 
 - zero_crossing_rate: Helps distinguish sharp transients (like speech or impact sounds) from smooth tones. High ZCR implies noisy or percussive content.
 
@@ -45,7 +45,9 @@ Use these tools together to rule out or confirm interpretations. For example:
 
 - Pursue multiple lines of inquiry, document your reasoning, and revise hypotheses as you go. Your goal is to fully understand the spectral structure and its potential sources.
 
-Use the following strategies to help distinguish between overlapping sources or ambiguous signal types. These methods allow you to move beyond basic spectral analysis and make informed decisions about signal origin:
+- At the end of your analysis, call the tool, save_agent_output, ONLY ONCE.
+
+Use the following strategies to help distinguish between overlapping sources or ambiguous signal types if available. These methods allow you to move beyond basic spectral analysis and make informed decisions about signal origin:
 
 - Temporal Stability Analysis: When a sustained spectral peak is detected (e.g., around 60–130 Hz), analyze its temporal stability. Use fft with a high number of time_bins (e.g., 20–30) focused on that frequency range. If energy is constant over time, it's likely from a mechanical or electrical source (e.g., motor, AC unit). If it fluctuates or varies rhythmically, it could be natural (e.g., water flow, wind).
 
@@ -76,7 +78,7 @@ You have access to the following tools:
 
 ## Output Format
 
-Please answer in the same language as the question and use the following format:
+Please answer in the same language as the question and use the following format unless specified otherwise:
 
 ```
 Thought: The current language of the user is: (user's language). I need to use a tool to help me answer the question.
@@ -107,122 +109,9 @@ Answer: [your answer here (In the same language as the user's question)]
 Thought: I cannot answer the question with the provided tools.
 Answer: [your answer here (In the same language as the user's question)]
 ```
-I want you to analyze an audio file and describe its spectral content. I want you to determine the likely sources of the audio based on its frequency characteristics and the context of the examples provided. I will walk you through some reasoning to help you do so. There are also tools at your disposal. Do not be satisfied with a single or broadband analysis. Instead, perform multiple FFTs at different resolutions to capture both short, transient events and longer, sustained trends. Use shorter time windows to catch brief, sharp peaks like clicks or speech fragments, and longer windows to reveal slower or more continuous signals like machinery hums or background noise. Pay close attention to how peaks and energy distributions change over time, which can tell you whether the source is static or dynamic. Use as many combinations of these FFTs as you need to fully understand the audio file. By layering insights from metadata, multiscale FFTs, and time-frequency patterns, you can build a clear understanding of what’s happening in the audio and where each signal component might be coming from. Use perplexity to search for similar audio files and their descriptions to help you understand the context of the audio file you are analyzing.
 
 
-    Example Inputs and Outputs
-
-    Example 1 Input:
-    This audio shows dominant low-frequency peaks near 392 Hz, with narrow tonal stability over time. It resembles synthetic tones found in video game environments.
-
-    Example 1 Output:
-    {{
-        "summary": "This clip contains synthesized tones resembling video game sound effects. There are stable peaks near 392 Hz consistent with tonal, digital sources.",
-        "structured": {{{{
-            "source_type": ["synthesized", "video game"]
-        }}
-    }}
-
-    Example 2 Input:
-    The signal includes periodic broadband bursts around 30 Hz and layered noise throughout. The waveform resembles crowd cheering in a stadium.
-
-    Example 2 Output:
-    {{
-        "summary": "This clip features crowd noise and cheering, consistent with a stadium environment. Energy appears in low and mid-band bursts.",
-        "structured": {{
-            "source_type": ["cheering", "crowd"]
-        }}
-    }}
-
-    Example 3 Input:
-    This recording contains irregular bursts between 250–500 Hz and long ambient tonal noise near 60 Hz. Matches urban street conditions.
-
-    Example 3 Output:
-    {{
-        "summary": "This clip was recorded on a street with cars, honking, human voices, and mechanical beeps. Low-frequency ambient hum present.",
-        "structured": {{
-            "source_type": ["street", "cars", "horns", "human", "beeping"]
-        }}
-    }}
-
-    Example 4 Input:
-    Sharp high-frequency tonal peaks repeating every second, plus short impulses typical of keystrokes. FFT stable at 2.5–3 kHz.
-
-    Example 4 Output:
-    {{
-        "summary": "This audio is dominated by keyboard typing. Consistent short pulses suggest machine-generated input.",
-        "structured": {{
-            "source_type": ["keyboard", "typing", "machine"]
-        }}
-    }}
-
-    Example 5 Input:
-    Broadband continuous signal with distinct chirps and frequency sweeps around 1–4 kHz, consistent with bird calls.
-
-    Example 5 Output:
-    {{
-        "summary": "This clip contains nature sounds including bird songs and forest ambiance.",
-        "structured": {{
-            "source_type": ["bird", "nature", "forest"]
-        }}
-    }}
-
-    Example 6 Input:
-    Repeating tonal bursts at 400–900 Hz, and background ambient tones with sudden transients typical of construction sites.
-
-    Example 6 Output:
-    {{
-        "summary": "This clip was recorded near a construction site with heavy machinery and motor noise.",
-        "structured": {{
-            "source_type": ["construction", "machine", "heavy machinery"]
-        }}
-    }}
-
-    Example 7 Input:
-    Strong periodic signals below 100 Hz, subtle mid-band beeps, and noisy artifacts. Possibly an elevator environment.
-
-    Example 7 Output:
-    {{
-        "summary": "This clip was taken inside an elevator. It includes mechanical sounds and elevator beeping.",
-        "structured": {{
-            "source_type": ["elevator", "machine", "motor", "beeping"]
-        }}
-    }}
-
-    Example 8 Input:
-    Tonal content includes piano harmonics and soft brass notes. Clear harmonic structure between 250–2,000 Hz.
-
-    Example 8 Output:
-    {{
-        "summary": "This clip contains classical music with piano and brass instruments.",
-        "structured": {{
-            "source_type": ["music", "classical", "piano", "brass"]
-        }}
-    }}
-
-    Example 9 Input:
-    Consistent wideband noise at 400–600 Hz. Speech modulations suggest multiple humans talking in overlapping intervals.
-
-    Example 9 Output:
-    {{
-        "summary": "This clip was taken in a call center with overlapping human conversations.",
-        "structured": {{
-            "source_type": ["human", "office"]
-        }}
-    }}
-
-    Example 10 Input:
-    High-energy bursts between 4–7 kHz and repetitive peaks. Matches fire crackling patterns.
-
-    Example 10 Output:
-    {{
-        "summary": "This audio was recorded near a fireplace with crackling wood sounds.",
-        "structured": {{
-            "source_type": ["fireplace", "crackling", "wood"]
-        }}
-    }}
-
-Reasoning: I have been given an audio file to analyze. My first step will be to use the file_meta_data tool to extract core metadata—such as duration, bitrate, and size—to determine how much content I’m working with and guide how I segment and analyze it. For example, if the audio is 5 minutes long, this tells me I’ll likely need to break it into multiple time slices to capture time-varying behavior. Next, I’ll initiate my spectral analysis with the fft tool. I will begin with a broad frequency sweep (e.g., 0–2000 Hz) over the full duration using moderate time and frequency binning to generate a high-level view of the spectral energy landscape. This allows me to locate key regions of interest—such as dominant peaks, sudden spikes, or broadband noise. Then, I will iteratively refine this view: I’ll zoom in on particular frequencies or time segments where unusual or persistent features are present. To capture short, transient signals (e.g., speech plosives, mechanical clicks), I’ll use narrow time_bins and wide freq_bins. For identifying sustained tones or broadband textures (e.g., air conditioning hum, river noise), I’ll use longer time_bins to see how energy persists or fades. By varying these parameters, I can isolate both brief events and long-running signal features. Once I’ve identified potential regions of interest, I will use the following supporting tools to better characterize the signal and help disambiguate between competing hypotheses:
+Reasoning: I have been given an audio file to analyze. My first step will be to use the file_meta_data tool to extract core metadata—such as duration, bitrate, and size—to determine how much content I’m working with and guide how I segment and analyze it. For example, if the audio is 5 minutes long, this tells me I’ll likely need to break it into multiple time slices to capture time-varying behavior. Next, I’ll initiate my spectral analysis with the fft tool. I will begin with a broad frequency sweep (e.g., 0–2000 Hz) over the full duration using moderate time and frequency binning to generate a high-level view of the spectral energy landscape. This allows me to locate key regions of interest—such as dominant peaks, sudden spikes, or broadband noise. Then, I will iteratively refine this view: I’ll zoom in on particular frequencies or time segments where unusual or persistent features are present. To capture short, transient signals (e.g., speech, explosives, mechanical clicks), I’ll use narrow time_bins and wide freq_bins. For identifying sustained tones or broadband textures (e.g., air conditioning hum, river noise), I’ll use longer time_bins to see how energy persists or fades. By varying these parameters, I can isolate both brief events and long-running signal features. Once I’ve identified potential regions of interest, I will use the following supporting tools to better characterize the signal and help disambiguate between competing hypotheses:
 
 zero_crossing_rate: This helps me detect signals with high temporal variation. For instance, if I detect a segment with rapidly fluctuating waveforms, a high ZCR would suggest noisy or percussive content—like rustling, static, or sibilant speech. A low ZCR indicates smoother, more tonal content like drones, motors, or sine-like oscillators.
 
@@ -315,39 +204,10 @@ Each FFT or tool result will inform the next step. For example, if I see a stron
 Output: 
     Produce an output in the following format:
     {{
-        "summary": "...",
         "structured": {{
             "source_type": ["..."]
         }}
     }}
 </instructions>
 
-"""
-
-eval_prompt="""
-You are an audio analysis assistant.
-
-Your task is to identify the three most prominent sound source types in an audio clip. You MUST use only:
-
-1. File metadata (e.g., sample rate, duration, number of channels)
-2. FFT (Fast Fourier Transform) spectral data — including dominant frequency peaks, energy distribution, and time-frequency patterns
-3. Perplexity web search to investigate plausible causes for specific frequency signatures, harmonics, or energy patterns observed in the FFT
-
-Do NOT use any tools other than metadata, FFT, and Perplexity search. 
-
-Steps:
-- Review the frequency content and structure from the FFT.
-- Identify spectral peaks and their potential origin (e.g., harmonic tones, impulsive transients, broadband noise).
-- Use Perplexity to look up what sources produce similar frequency profiles.
-- Combine insights from FFT and Perplexity to hypothesize the 3 most prominent and interpretable source types.
-
-Return your result in the following JSON format:
-
-{
-  "structured": {
-    "source_type": ["label1", "label2", "label3"]
-  }
-}
-
-Labels should be distinct, semantically meaningful, and grounded in the spectral evidence.
 """

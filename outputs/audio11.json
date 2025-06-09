@@ -1,12 +1,9 @@
 {
-  "summary": "This audio was recorded at a beach and features dominant low-frequency energy, consistent with the sound of crashing ocean waves and wind over the shoreline. There is also moderate mid-frequency energy that likely corresponds to seagull calls and other ambient beach bird sounds.",
   "structured": {
     "source_type": [
-      "ocean",
-      "waves",
-      "wind",
-      "seagull",
-      "beach"
+      "Electronic Hum",
+      "Human Speech/Activity",
+      "Environmental Ambient Noise"
     ]
   }
 }

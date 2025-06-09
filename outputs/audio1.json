@@ -1,11 +1,9 @@
 {
-  "summary": "This recording exhibits continuous low-frequency energy predominantly below 500 Hz with stable amplitude and moderate transient fluctuations. Although the spectral flatness suggests a narrow, tonal quality, this is likely a result of resonant effects produced when water flows over rocks. Combined with the image showing a natural stream with flowing water and rocks, the evidence strongly supports that the primary source of the recording is ambient water flow in a natural stream.",
   "structured": {
     "source_type": [
-      "water",
-      "natural stream",
-      "flowing water",
-      "ambient nature"
+      "Electrical/mechanical hum",
+      "Human activity (transient events)",
+      "Ambient environmental noise"
     ]
   }
 }

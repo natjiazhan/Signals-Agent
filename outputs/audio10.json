@@ -1,10 +1,9 @@
 {
-  "summary": "This audio was recorded in a forest and captures a natural soundscape. The spectral analysis shows ambient low-frequency background noise with clear, repetitive peaks in the mid to high-frequency bands (approximately 2000\u20136000 Hz) which are characteristic of bird calls.",
   "structured": {
     "source_type": [
-      "bird",
-      "forest",
-      "nature"
+      "human speech",
+      "electrical/machine hum",
+      "ambient natural sounds"
     ]
   }
 }

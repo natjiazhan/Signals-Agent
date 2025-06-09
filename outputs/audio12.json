@@ -1,11 +1,9 @@
 {
-  "summary": "This audio recording, captured in front of a fireplace, exhibits stable low-frequency ambient energy and moderate, transient peaks in the 2000\u20138000 Hz range. These bursts are consistent with the crackling sounds of burning wood, confirming the fireplace environment.",
   "structured": {
     "source_type": [
-      "fireplace",
-      "crackling",
-      "wood",
-      "ambient"
+      "human vocal activity",
+      "electrical/mechanical hum",
+      "ambient environmental noise"
     ]
   }
 }
